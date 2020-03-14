@@ -21,5 +21,11 @@ Route::group([
 ], function(){
     Route::get('/', 'HomeController@index')->name('home');
     Route::get('/journal/{group}/{subject}', 'JournalController@show')->name('journal');
+    // Route::name('group.')->prefix('/group')->group(function(){
+        // Route::get('/{id}', 'GroupController@show')->name('show');
+        // Route::get('/{id}/edit', 'GroupController@edit')->name('edit');
+        // Route::post('/{id}/edit', 'GroupController@save');
+        Route::resource('group', 'GroupController');
+    // });
 });
 
