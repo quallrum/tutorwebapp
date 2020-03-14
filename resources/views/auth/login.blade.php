@@ -9,25 +9,8 @@
 @endsection
 
 @section('content')
-	<header class="container-fluid">
-		<div class="container header__content"><a href="/"><img class="header__logo" src="/img/logo.svg" alt="logo"/></a>
-			<h1 class="header__heading">Tutor's WEB API</h1>
-		</div>
-	</header>
 	<section class="container authorization">
-		@if ($errors->any())        
-			<div class="authorization__alert" id="alert">
-				@foreach ($errors->all() as $msg)
-					<p class="authorization__alert-text" id="alertText">{{ $msg }}</p>
-				@endforeach
-				<div class="authorization__alert-cross" id="alertCross">X</div>
-			</div>
-		@else
-			<div class="authorization__alert" id="alert">
-				<p class="authorization__alert-text" id="alertText"></p>
-				<div class="authorization__alert-cross" id="alertCross">X</div>
-			</div>
-		@endif
+		@include('shared.errors')
 		<div class="authorization__window">
 			<h2 class="authorization__heading">Вход</h2>
 			<form class="authorization__form" action="{{ route('login') }}" method="post" name="authorization">
