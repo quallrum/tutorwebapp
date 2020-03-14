@@ -16,4 +16,10 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes(['verify' => true]);
 
-Route::get('/', 'HomeController@index')->name('home')->middleware(['verified']);
+Route::group([
+    'middleware'    => ['auth', 'verified']
+], function(){
+    Route::get('/', 'HomeController@index')->name('home');
+    Route::get('/journal/{group}/{subject}', 'JournalController@show')->name('journal');
+});
+
