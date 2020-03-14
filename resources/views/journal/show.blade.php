@@ -9,19 +9,6 @@
 @endsection
 
 @section('content')
-	<header class="container-fluid">
-		<div class="container header__content">
-			<a href="/"><img class="header__logo" src="/img/logo.svg" alt="logo"/></a>
-			<h1 class="header__heading">Tutor's WEB API</h1>
-			<form class="journal__signOut" action="" method="POST" name="journalSignOut">
-				<input type="hidden" name="_token" value=""/>
-				<label>
-					<img class="journal__signOut-img" src="/img/signOut.svg" alt="Sign Out"/>
-					<input class="journal__signOut-submit" type="submit" value=""/>
-				</label>
-			</form>
-		</div>
-	</header>
 	<section class="container-fluid journal">
 		<h1 class="journal__heading">{{ $group->title }}</h1>
 		<div class="journal__addStudentPopUp">
