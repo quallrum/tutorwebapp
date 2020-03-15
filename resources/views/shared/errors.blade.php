@@ -11,3 +11,8 @@
 		<div class="authorization__alert-cross" id="alertCross">X</div>
 	</div>
 @endif
+@if (Session::has('success'))        
+	{{ Session::pull('success') }}<br>
+@else
+
+@endif
