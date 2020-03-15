@@ -11,7 +11,7 @@
 
 @section('content')
 	<section class="registration container">
-		@include('shared.errors')
+		@include('shared.alerts')
 		<div class="register" id="registerWindow">
 			<h2 class="register__heading">Создать аккаунт</h2><a class="register__enter" href="" id="registerLinkToEnter">вход</a>
 			<form class="register__form" action="{{ route('register') }}" method="post" name="registerForm" id="registartionForm">
