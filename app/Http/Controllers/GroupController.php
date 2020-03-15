@@ -35,15 +35,10 @@ class GroupController extends Controller{
 		else return back()->withErrors('Creating failed');
 	}
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  \App\Models\Group  $group
-	 * @return \Illuminate\Http\Response
-	 */
-	public function show(Group $group)
-	{
-		//
+	public function show(Group $group){
+		return view('group.show', [
+			'group'	=> $group,
+		]);
 	}
 
 	public function edit(Group $group){
