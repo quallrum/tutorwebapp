@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Group;
 use App\Models\User;
-
-use App\Http\Requests\Group\UpdateRequest;
-
+use App\Http\Requests\Group\SaveRequest;
 use Illuminate\Http\Request;
 
 class GroupController extends Controller{
@@ -19,25 +17,22 @@ class GroupController extends Controller{
 		]);
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function create()
-	{
-		//
+	public function create(){
+		$group = new Group;
+		$monitors = User::byRole('monitor');
+
+		return view('group.form', [
+			'action'	=> route('group.store'),
+			'method'	=> 'post',
+			'group'		=> $group,
+			'monitors'	=> $monitors,
+		]);
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return \Illuminate\Http\Response
-	 */
-	public function store(Request $request)
-	{
-		//
+	public function store(SaveRequest $request){
+		$group = Group::create($request->only(['title', 'monitor']));
+		if($group->exists)	return redirect()->route('group.edit', ['group' => $group->id])->with('success', 'Created successful');
+		else return back()->withErrors('Creating failed');
 	}
 
 	/**
@@ -62,7 +57,7 @@ class GroupController extends Controller{
 		]);
 	}
 
-	public function update(UpdateRequest $request, Group $group){
+	public function update(SaveRequest $request, Group $group){
 		if( $group->update($request->only(['title', 'monitor'])) ) return back()->with('success', 'Edited successful');
 		else return back()->withErrors('Edit failed');
 	}
