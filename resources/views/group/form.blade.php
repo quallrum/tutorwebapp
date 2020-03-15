@@ -1,7 +1,7 @@
 <form action="{{ $action }}" method="post">
 	@csrf
 	@method($method)
-	@include('shared.errors')
+	@include('shared.alerts')
 	<label for="group-title">Group title</label>
 	<input type="text" name="title" id="group-title" value="{{ $group->title ?? '' }}"><br>
 	@if ($monitors)

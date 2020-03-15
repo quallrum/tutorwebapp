@@ -10,7 +10,7 @@
 
 @section('content')
 	<section class="container authorization">
-		@include('shared.errors')
+		@include('shared.alerts')
 		<div class="authorization__window">
 			<h2 class="authorization__heading">Вход</h2>
 			<form class="authorization__form" action="{{ route('login') }}" method="post" name="authorization">
