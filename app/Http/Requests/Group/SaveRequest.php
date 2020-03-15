@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Group;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\DB;
 
 class SaveRequest extends FormRequest{
 
@@ -13,7 +14,9 @@ class SaveRequest extends FormRequest{
 	public function rules(){
 		return [
 			'title'		=> ['required', 'string', 'min:4', 'max:10'],
-			'monitor'	=> ['required', 'exists:users,id'],
+			'monitor'	=> [function($attribute, $value, $fail){
+				if(is_numeric($value) and !DB::table('users')->where('id', $value)->count()) $fail('The '.$attribute.' value is invalid');
+			}],
 		];
 	}
 }
