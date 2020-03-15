@@ -9,7 +9,7 @@ class Group extends Model{
     protected $fillable = ['title', 'name', 'monitor'];
 
     public function setMonitorAttribute($id){
-        $this->attributes['monitor_id'] = $id;
+        $this->attributes['monitor_id'] = is_numeric($id) ? (int) $id : null;
     }
 
     public function monitor(){ return $this->belongsTo(User::class); }

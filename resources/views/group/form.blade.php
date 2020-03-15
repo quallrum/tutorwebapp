@@ -7,8 +7,10 @@
 	@if ($monitors)
 		<label for="group-title">Group monitor</label>
 		<select name="monitor" id="group-monitor">
-			@if (!$group->exists)
-				<option disabled selected>Select group monitor</option>
+			@if ($group->monitor)
+				<option>No monitor</option>
+			@else
+				<option selected>No monitor</option>
 			@endif
 			@foreach ($monitors as $user)
 				@if ($group->monitor_id == $user->id)
