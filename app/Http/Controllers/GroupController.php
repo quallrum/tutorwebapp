@@ -30,7 +30,7 @@ class GroupController extends Controller{
 	}
 
 	public function store(SaveRequest $request){
-		$group = Group::create($request->only(['title', 'monitor']));
+		$group = Group::create($request->only(['title']));
 		if($group->exists)	return redirect()->route('group.edit', ['group' => $group->id])->with('success', 'Created successful');
 		else return back()->withErrors('Creating failed');
 	}
@@ -42,7 +42,7 @@ class GroupController extends Controller{
 	}
 
 	public function edit(Group $group){
-		$monitors = User::byRole('monitor');
+		$monitors = User::byRole('user');
 
 		return view('group.form', [
 			'action'	=> route('group.update', ['group' => $group->id]),
@@ -53,8 +53,12 @@ class GroupController extends Controller{
 	}
 
 	public function update(SaveRequest $request, Group $group){
-		if( $group->update($request->only(['title', 'monitor'])) ) return back()->with('success', 'Edited successful');
-		else return back()->withErrors('Edit failed');
+		if( 
+			!$group->update($request->only(['title'])) or
+			!$group->setMonitor($request->monitor)
+		) return back()->withErrors('Edit failed');
+
+		return back()->with('success', 'Edited successful');
 	}
 
 	/**

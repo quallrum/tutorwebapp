@@ -37,7 +37,7 @@ class User extends Authenticatable implements MustVerifyEmail{
     ];
 
     public static function byRole($role){
-        return static::join('roles', 'users.role_id', '=', 'roles.id')->where('roles.name', 'monitor')->get('users.*');
+        return static::join('roles', 'users.role_id', '=', 'roles.id')->where('roles.name', $role)->get('users.*');
     }
 
     public function role(){ return $this->belongsTo(Role::class); }

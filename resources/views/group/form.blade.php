@@ -9,15 +9,12 @@
 		<select name="monitor" id="group-monitor">
 			@if ($group->monitor)
 				<option>No monitor</option>
+				<option disabled selected value="{{ $group->monitor->id }}">{{ $group->monitor->email }}</option>
 			@else
 				<option selected>No monitor</option>
 			@endif
 			@foreach ($monitors as $user)
-				@if ($group->monitor_id == $user->id)
-					<option selected value="{{ $user->id }}">{{ $user->email }}</option>
-				@else
-					<option value="{{ $user->id }}">{{ $user->email }}</option>
-				@endif
+				<option value="{{ $user->id }}">{{ $user->email }}</option>
 			@endforeach
 		</select>
 		<br>
