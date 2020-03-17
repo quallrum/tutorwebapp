@@ -151,35 +151,35 @@ function sendAjaxWithRegisterData() {
     try {
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
-
-
+                if (xhr.status == 404) {
+                    putTextInAlertAndShowIt('Что-то пошло не так(');
+                    throw new Error('404 server not found');
+                }
+                let arrayJSON = JSON.parse(xhr.responseText);
 
                 if (xhr.status == 200) {
-                    let arrayJSON = JSON.parse(xhr.responseText);
-
-                    if (arrayJSON.result == 'ok') {
-                        let linkToRedirect = arrayJSON.link;
-
-                        if (linkToRedirect) {
-                            window.location.href = linkToRedirect;
-                        } else {
-                            throw new Error('cant find link');
-                        }
-
+                    let linkToRedirect = arrayJSON.redirect;
+                    if (linkToRedirect) {
+                        window.location.href = linkToRedirect;
                     } else {
-                        putTextInAlertAndShowIt(arrayJSON.result);
+                        putTextInAlertAndShowIt('Что-то пошло не так(');
+                        throw new Error('cant find link');
+                    }
+                } else {
+                    let arrayOfErrors = arrayJSON.errors;
+                    let strWithErrors = '';
+
+                    for (let error in arrayOfErrors) {
+                        strWithErrors += error + '\n';
                     }
 
-                } else {
-
-                    putTextInAlertAndShowIt('Что-то пошло не так(');
-                    throw new Error('server error');
-
+                    putTextInAlertAndShowIt(strWithErrors);
                 }
             }
         }
 
         xhr.open("POST", action);
+        xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send(formData);
 
     } catch (e) {

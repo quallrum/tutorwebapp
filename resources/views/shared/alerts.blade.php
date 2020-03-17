@@ -3,12 +3,12 @@
 		@foreach ($errors->all() as $msg)
 			<p class="authorization__alert-text" id="alertText">{{ $msg }}</p>
 		@endforeach
-		<div class="authorization__alert-cross" id="alertCross">X</div>
+		<div class="authorization__alert-cross" id="alertCross">&#9587;</div>
 	</div>
 @else
 	<div class="authorization__alert" id="alert">
 		<p class="authorization__alert-text" id="alertText"></p>
-		<div class="authorization__alert-cross" id="alertCross">X</div>
+		<div class="authorization__alert-cross" id="alertCross">&#9587;</div>
 	</div>
 @endif
 @if (Session::has('success'))        

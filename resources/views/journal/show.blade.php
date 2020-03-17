@@ -10,7 +10,7 @@
 
 @section('content')
 	<section class="container-fluid journal">
-		<h1 class="journal__heading">{{ $group->title }}</h1>
+		<h2 class="journal__heading">{{ $group->title }} <span class="journal__heading-subject">{{ $subject->title }} ({{ $subject->type }})</span></h2>
 		<div class="journal__addStudentPopUp">
 			<h2 class="journal__addStudentPopUp-heading">Введите имя студента</h2>
 			<input class="journal__addStudentPopUp-input" type="text" id="nameOfNewStudent"/>

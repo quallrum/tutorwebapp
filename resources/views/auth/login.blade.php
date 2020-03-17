@@ -16,7 +16,7 @@
 			<form class="authorization__form" action="{{ route('login') }}" method="post" name="authorization">
 				@csrf
 				<label class="authorization__item">
-					<p class="authorization__text">Логин</p>
+					<p class="authorization__text">Email</p>
 					<input class="authorization__input" type="text" name="email" autocomplete="nickname" id="login"/>
 				</label>
 				<label class="authorization__item">
@@ -24,6 +24,7 @@
 					<input class="authorization__input" type="password" name="password" autocomplete="current-password" id="password"/>
 					<p class="authorization__captureWarning">Пароль должен содержать не менее 4 символов.</p>
 				</label>
+				<a class="authorization__forgetPassword" href="">Забыли пароль?</a>
 				<button class="authorization__submit" type="submit" id="submit">Готово</button>
 			</form>
 		</div>
