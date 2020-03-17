@@ -44,6 +44,7 @@ function sendAjaxWithJournalData() {
     }
 
     xhr.open('POST', action);
+    xhr.setRequestHeader('Content-Type', 'application/json')
     xhr.send(formData);
 }
 
@@ -120,4 +121,15 @@ function addStudent(name) {
     }
 
     document.querySelector('.journal__table').append(lineElem);
+}
+
+let crossesInAlerts = document.querySelectorAll('.journal__alert-cross');
+
+for (let i = 0; i < crossesInAlerts.length; i++) {
+    crossesInAlerts[i].addEventListener('click', hideAlertOnCrossClick);
+}
+
+function hideAlertOnCrossClick(e) {
+    let clickedElem = e.target;
+    clickedElem.parentElement.style.display = 'none';
 }
