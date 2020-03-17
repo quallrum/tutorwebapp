@@ -14,7 +14,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Auth::routes(['verify' => true]);
+Auth::routes([
+    'verify'    => true,
+    'confirm'   => false,
+]);
 
 Route::group([
     'middleware'    => ['auth', 'verified']
