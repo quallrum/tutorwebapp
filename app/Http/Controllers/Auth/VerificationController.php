@@ -39,4 +39,18 @@ class VerificationController extends Controller
         $this->middleware('signed')->only('verify');
         $this->middleware('throttle:6,1')->only('verify', 'resend');
     }
+
+    public function resend(Request $request){
+        if ($request->user()->hasVerifiedEmail()) {
+            return $request->wantsJson()
+                        ? response()->json(['redirect' => url()->previous($this->redirectPath())])
+                        : redirect($this->redirectPath());
+        }
+
+        $request->user()->sendEmailVerificationNotification();
+
+        return $request->wantsJson()
+                    ? response()->json(['redirect' => url()->previous($this->redirectPath())])
+                    : back()->with('status', 'A fresh verification link has been sent to your email address.');
+    }
 }
