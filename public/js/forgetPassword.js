@@ -55,29 +55,10 @@ function sendAjaxForgetPassword() {
 
 
         xhr.open('POST', action);
-        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('Accept', 'application/json');
         xhr.send(formData);
 
     } catch (e) {
         console.log(e);
     }
 }
-
-
-function putTextInAlertAndShowIt(text) {
-    document.getElementById('alertText').innerText = text;
-    document.getElementById('alert').style.display = 'block';
-}
-
-function putTextInSuccessAlertAndShowIt(text) {
-    document.getElementById('successText').innerText = text;
-    document.getElementById('success').style.display = 'block';
-}
-
-document.getElementById('alertCross').addEventListener('click', function () {
-    document.getElementById('alert').style.display = 'none';
-});
-
-document.getElementById('successCross').addEventListener('click', function () {
-    document.getElementById('success').style.display = 'none';
-});

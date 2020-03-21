@@ -28,7 +28,8 @@
 			@endauth
 		</div>
 	</header>
-    @yield('content')
+	@yield('content')
+	<script src="js/alerts.js"></script>
     @yield('scripts')
 </body>
 </html>

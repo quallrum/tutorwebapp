@@ -22,25 +22,21 @@ function sendAjaxChooseGroupForm() {
                     if (linkToRedirect) {
                         window.location.href = linkToRedirect;
                     } else {
+                        putTextInAlertAndShowIt('Упс, что-то пошло не так(');
                         throw new Error('cant find link');
                     }
                 } else {
-                    document.getElementById('chooseAlert').style.display = 'block';
+                    putTextInAlertAndShowIt('Упс, что-то пошло не так(');
                 }
             }
         }
 
 
         xhr.open('POST', action);
-        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('Accept', 'application/json');
         xhr.send(formData);
 
     } catch (e) {
         console.log(e);
-        document.getElementById('chooseAlert').style.display = 'block';
     }
 }
-
-document.getElementById('chooseAlertCross').addEventListener('click', function () {
-    document.getElementById('chooseAlert').style.display = 'none';
-});
