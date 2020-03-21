@@ -44,7 +44,7 @@ function sendAjaxWithJournalData() {
     }
 
     xhr.open('POST', action);
-    xhr.setRequestHeader('Content-Type', 'application/json')
+    xhr.setRequestHeader('Accept', 'application/json')
     xhr.send(formData);
 }
 
@@ -74,62 +74,4 @@ function addColumn() {
         arrayOfLines[i].append(itemWithN);
     }
     setHandlerForAbsentInputs();
-}
-
-try {
-    document.getElementById('addStudent').addEventListener('click', function () {
-        document.querySelector('.journal__addStudentPopUp').style.display = 'block';
-    });
-    document.getElementById('crossAddNewStudent').addEventListener('click', function () {
-        document.querySelector('.journal__addStudentPopUp').style.display = 'none';
-    });
-} catch (e) {
-    console.log(e);
-}
-
-try {
-    document.getElementById('submitNewStudentName').addEventListener('click', function () {
-        let inputValue = document.getElementById('nameOfNewStudent').value;
-        if (inputValue != "" && inputValue != null && inputValue != undefined) {
-            document.querySelector('.journal__addStudentPopUp').style.display = 'none';
-            document.getElementById('nameOfNewStudent').value = '';
-            addStudent(inputValue);
-        }
-    });
-} catch (e) {
-    console.log(e);
-}
-
-function addStudent(name) {
-    let lineElem = document.createElement("div");
-    lineElem.className = "journal__table-line";
-
-    let lineWithDate = document.querySelector('.journal__table-line');
-    let arrayOfChildrenLength = lineWithDate.children.length;
-
-    let firstTdItem = document.createElement('div');
-    firstTdItem.className = "journal__table-item";
-    firstTdItem.innerHTML = name;
-
-    lineElem.append(firstTdItem);
-
-    for (let i = 1; i < arrayOfChildrenLength; i++) {
-        let item = document.createElement('div');
-        item.className = 'journal__table-item';
-        item.innerHTML = '<input class="absent" type="text" name="" value=""/>';
-        lineElem.append(item);
-    }
-
-    document.querySelector('.journal__table').append(lineElem);
-}
-
-let crossesInAlerts = document.querySelectorAll('.journal__alert-cross');
-
-for (let i = 0; i < crossesInAlerts.length; i++) {
-    crossesInAlerts[i].addEventListener('click', hideAlertOnCrossClick);
-}
-
-function hideAlertOnCrossClick(e) {
-    let clickedElem = e.target;
-    clickedElem.parentElement.style.display = 'none';
 }

@@ -43,7 +43,6 @@
 			</div>
 			<div class="journal__buttons">
 				<button class="journal__submit" type="submit">сохранить</button>
-				<div class="journal__addStudent" id="addStudent">Добавить студента</div>
 			</div>
 		</form>
 	</section>

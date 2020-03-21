@@ -1,18 +1,27 @@
-@if ($errors->any())        
-	<div class="authorization__alert" id="alert">
+@if ($errors->any())
+	<div class="alert alert--error" id="alertError">
 		@foreach ($errors->all() as $msg)
-			<p class="authorization__alert-text" id="alertText">{{ $msg }}</p>
+        	<p class="alert__text alert__text--error" id="alertErrorText">{{ $msg }}</p>
 		@endforeach
-		<div class="authorization__alert-cross" id="alertCross">&#9587;</div>
+        <div class="alert__cross alert__cross--error" id="alertErrorCross">&#9587;</div>
 	</div>
 @else
-	<div class="authorization__alert" id="alert">
-		<p class="authorization__alert-text" id="alertText"></p>
-		<div class="authorization__alert-cross" id="alertCross">&#9587;</div>
+	<div class="alert alert--error" id="alertError">
+        	<p class="alert__text alert__text--error" id="alertErrorText"></p>
+        <div class="alert__cross alert__cross--error" id="alertErrorCross">&#9587;</div>
 	</div>
 @endif
-@if (Session::has('success'))        
-	{{ Session::pull('success') }}<br>
+@if (Session::has('success'))
+	<div class="alert alert--success" id="alertSuccess">
+		<p class="alert__text alert__text--success" id="alertSuccessText">{{ Session::pull('success') }}</p>
+		<div class="alert__cross alert__cross--success" id="alertSuccessCross">&#9587;</div>
+	</div>
 @else
+	<div class="alert alert--success" id="alertSuccess">
+		<p class="alert__text alert__text--success" id="alertSuccessText"></p>
+		<div class="alert__cross alert__cross--success" id="alertSuccessCross">&#9587;</div>
+	</div>
+@endif
 
-@endif
+    
+      

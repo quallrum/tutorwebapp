@@ -36,7 +36,7 @@ function sendAjax() {
 
 
         xhr.open("POST", action);
-        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader("Accept", "application/json");
         xhr.send(formData);
 
     } catch (e) {
@@ -44,21 +44,4 @@ function sendAjax() {
     }
 }
 
-function putTextInAlertAndShowIt(text) {
-    document.getElementById('alertErrorText').innerText = text;
-    document.getElementById('alertError').style.display = 'block';
-}
-
-function putTextInSuccessAlertAndShowIt(text) {
-    document.getElementById('alertSuccessText').innerText = text;
-    document.getElementById('alertSuccess').style.display = 'block';
-}
-
-document.getElementById('alertErrorCross').addEventListener('click', function () {
-    document.getElementById('alertError').style.display = 'none';
-});
-
-document.getElementById('alertSuccessCross').addEventListener('click', function () {
-    document.getElementById('alertSuccess').style.display = 'none';
-});
 
