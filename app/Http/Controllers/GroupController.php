@@ -19,7 +19,7 @@ class GroupController extends Controller{
 
 	public function create(){
 		$group = new Group;
-		$monitors = User::byRole('monitor');
+		$monitors = User::withRole('monitor');
 
 		return view('group.form', [
 			'action'	=> route('group.store'),
@@ -42,7 +42,7 @@ class GroupController extends Controller{
 	}
 
 	public function edit(Group $group){
-		$monitors = User::byRole('user');
+		$monitors = User::withRole('user');
 
 		return view('group.form', [
 			'action'	=> route('group.update', ['group' => $group->id]),
