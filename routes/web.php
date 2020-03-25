@@ -15,20 +15,19 @@ use Illuminate\Support\Facades\Route;
 
 
 Auth::routes([
-    'verify'    => true,
-    'confirm'   => false,
+	'verify'    => true,
+	'confirm'   => false,
 ]);
 
 Route::group([
-    'middleware'    => ['auth', 'verified']
+	'middleware'    => ['auth', 'verified']
 ], function(){
-    Route::get('/', 'HomeController@index')->name('home');
-    Route::get('/journal/{group}/{subject}', 'JournalController@show')->name('journal');
-    // Route::name('group.')->prefix('/group')->group(function(){
-        // Route::get('/{id}', 'GroupController@show')->name('show');
-        // Route::get('/{id}/edit', 'GroupController@edit')->name('edit');
-        // Route::post('/{id}/edit', 'GroupController@save');
-        Route::resource('group', 'GroupController');
-    // });
+	Route::get('/', 'HomeController@index')->name('home');
+	Route::name('journal.')->prefix('/journal')->group(function(){
+		Route::get('/', 'JournalController@group')->name('group');
+		Route::get('/{group}', 'JournalController@subject')->name('subject');
+		Route::get('/{group}/{subject}', 'JournalController@show')->name('show');
+	});
+	Route::resource('group', 'GroupController');
 });
 

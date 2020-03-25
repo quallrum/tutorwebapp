@@ -35,6 +35,14 @@ class Group extends Model{
 		$this->attributes['monitor_id'] = is_numeric($id) ? (int) $id : null;
 	}
 
+	public static function ofTutor($user){
+		$user = $user instanceof User ? $user->id : $user;
+		return static::join('group_subject', 'groups.id', '=', 'group_subject.group_id')
+			->where('group_subject.tutor_id', $user)
+			->groupBy('group_subject.group_id')
+			->get('groups.*');
+	}
+
 	public function monitor(){ return $this->belongsTo(User::class); }
 	public function students(){ return $this->hasMany(Student::class); }
 	public function subjects(){ return $this->belongsToMany(Subject::class); }
