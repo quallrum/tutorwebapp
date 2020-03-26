@@ -12,6 +12,7 @@ use App\Models\Journal;
 class JournalController extends Controller{
 	
 	public function group(){
+		$this->authorize('journal.changeGroup');
 		$user = Auth::user();
 
 		if($user->role->name == 'admin') 		$groups = Group::all();
@@ -24,6 +25,7 @@ class JournalController extends Controller{
 	}
 
 	public function subject(Group $group){
+		$this->authorize('journal.changeSubject');
 		$user = Auth::user();
 
 		if($user->role->name == 'admin' 
@@ -38,6 +40,8 @@ class JournalController extends Controller{
 	}
 
 	public function show(Group $group, Subject $subject){
+		$this->authorize('journal.view');
+
 		$journal = Journal::table($group, $subject);
 
 		$header = [];
@@ -57,6 +61,8 @@ class JournalController extends Controller{
 	}
 
 	public function update(Group $group, Subject $subject, Request $request){
+		$this->authorize('journal.edit');
+
 		$failed = [];
 		$failed_new = [];
 		$errors = [];
