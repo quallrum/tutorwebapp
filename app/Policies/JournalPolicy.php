@@ -14,7 +14,7 @@ class JournalPolicy{
     }
 
     public function changeGroup($user){
-        return $user->hasRole(['tutor', 'monitor']);
+        return $user->hasRole(['tutor']);
     }
 
     public function changeSubject($user){
