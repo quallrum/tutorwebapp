@@ -8,6 +8,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class Journal extends Model{
 
+	protected $fillable = ['student_id', 'subject_id', 'value'];
+
+	public static function lastDate($student, $subject){
+		$student = $student instanceof Student ? $student->id : $student;
+		$subject = $subject instanceof Subject ? $subject->id : $subject;
+
+		$r = static::where('student_id', $student)
+			->where('subject_id', $subject)
+			// ->where('subject_id', 1000)
+			->orderBy('created_at', 'desc')
+			->take(1)
+			->get('created_at')
+			->first();
+		if($r) return (new \DateTime($r->created_at))->format('Y-m-d');
+		else return (new \DateTime)->format('Y-m-d');
+	}
+
 	public function editable(){
 		return (new \DateTime)->format('Y-m-d') === (new \DateTime($this->attributes['created_at']))->format('Y-m-d');
 	}
@@ -16,9 +33,8 @@ class Journal extends Model{
 		return (new \DateTime($this->attributes['created_at']))->format('d.m');
 	}
 	public function getValueAttribute(){
-		if(is_null($this->attributes['value'])) return 'н';
-		elseif($this->attributes['value'])      return $this->attributes['value'];
-		else                                    return '';
+		if($this->attributes['value'])	return '';
+		else							return 'н';
 	}
 
 	public static function table(Group $group, Subject $subject){

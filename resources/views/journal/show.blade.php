@@ -10,6 +10,7 @@
 
 @section('content')
 	<section class="container-fluid journal">
+		@include('shared.alerts')
 		<h2 class="journal__heading">{{ $group->title }} <span class="journal__heading-subject">{{ $subject->title }} ({{ $subject->type }})</span></h2>
 		<div class="journal__addStudentPopUp">
 			<h2 class="journal__addStudentPopUp-heading">Введите имя студента</h2>
@@ -17,8 +18,11 @@
 			<button class="journal__addStudentPopUp-button" id="submitNewStudentName">Готово</button>
 			<div class="journal__addStudentPopUp-cross" id="crossAddNewStudent">X</div>
 		</div>
-		<div class="journal__addColumn" id="addColumn">Добавить колонку</div>
-		<form action="" name="journal">
+		@if (true or $user->can('journal.edit'))
+			<div class="journal__addColumn" id="addColumn">Добавить колонку</div>
+				<form action="" method="post" name="journal">
+					@csrf
+			@endif
 			<div class="journal__table">
 				<div class="journal__table-line">
 					<div class="journal__table-item">ФИО</div>
@@ -28,22 +32,32 @@
 				</div>
 				@foreach ($group->students as $student)
 					<div class="journal__table-line">
-						<div class="journal__table-item">{{ $student->lastname }} {{ $student->firstname }}</div>
-						@foreach ($journal[$student->id] as $record)
-							<div class="journal__table-item">
-								@if (true or $record->editable())
-									<input class="absent" type="text" name="" value="{{ $record->value }}"/>
-								@else
+						<div class="journal__table-item" data-id="{{ $student->id }}">{{ $student->lastname }} {{ $student->firstname }}</div>
+						@if (true or $user->can('journal.edit'))
+							@foreach ($journal[$student->id] as $record)
+								<div class="journal__table-item">
+									@if ($record->editable())
+										<input class="absent" type="text" name="journal[{{ $record->id }}]" value="{{ $record->value }}"/>
+									@else
+										{{ $record->value }}
+									@endif
+								</div>
+							@endforeach
+						@else
+							@foreach ($journal[$student->id] as $record)
+								<div class="journal__table-item">
 									{{ $record->value }}
-								@endif
-							</div>
-						@endforeach
+								</div>
+							@endforeach
+						@endif
 					</div>
 				@endforeach
 			</div>
-			<div class="journal__buttons">
-				<button class="journal__submit" type="submit">сохранить</button>
-			</div>
-		</form>
+			@if (true or $user->can('journal.edit'))
+				<div class="journal__buttons">
+					<button class="journal__submit" type="submit">сохранить</button>
+				</div>
+				</form>
+			@endif
 	</section>
 @endsection

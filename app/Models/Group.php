@@ -43,6 +43,15 @@ class Group extends Model{
 			->get('groups.*');
 	}
 
+	public function hasStudent($student){
+		$student = $student instanceof Student ? $student->id : $student;
+		return (bool) static::join('students', 'students.group_id', '=', 'groups.id')
+			->where('groups.id', $this->id)
+			->where('students.id', $student)
+			->get()
+			->first();
+	}
+
 	public function monitor(){ return $this->belongsTo(User::class); }
 	public function students(){ return $this->hasMany(Student::class); }
 	public function subjects(){ return $this->belongsToMany(Subject::class); }
