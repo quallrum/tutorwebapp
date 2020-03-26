@@ -5,7 +5,6 @@
 @endsection
 
 @section('scripts')
-	<script src="/js/alerts.js"></script>
 	<script src="/js/chooseGroup.js"></script>
 @endsection
 

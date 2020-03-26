@@ -5,7 +5,7 @@
 @endsection
 
 @section('scripts')
-	<script src="js/journal.js"></script>
+	<script src="/js/journal.js"></script>
 @endsection
 
 @section('content')
@@ -31,7 +31,7 @@
 						<div class="journal__table-item">{{ $student->lastname }} {{ $student->firstname }}</div>
 						@foreach ($journal[$student->id] as $record)
 							<div class="journal__table-item">
-								@if ($record->editable())
+								@if (true or $record->editable())
 									<input class="absent" type="text" name="" value="{{ $record->value }}"/>
 								@else
 									{{ $record->value }}
