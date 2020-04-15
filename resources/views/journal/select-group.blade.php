@@ -14,11 +14,11 @@
 		<div class="chooseGroup__window">
 			<h2 class="chooseGroup__heading">Выберите группу</h2>
 			@if ($groups and $groups->count())
-				@foreach ($groups as $group)
-					<label class="chooseGroup__item">
-						<a class="chooseGroup__text" href="{{ route('journal.subject', ['group' => $group->id]) }}">{{ $group->title }}</a>
-					</label>
-				@endforeach
+				<div class="chooseGroup__items">
+					@foreach ($groups as $group)
+						<a class="chooseGroup__item" href="{{ route('journal.subject', ['group' => $group->id]) }}">{{ $group->title }}</a>
+					@endforeach
+				</div>
 			@else
 				You have no groups
 			@endif

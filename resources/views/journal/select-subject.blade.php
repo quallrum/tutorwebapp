@@ -14,13 +14,13 @@
 		<div class="chooseSubject__window">
 			<h2 class="chooseSubject__heading">Выберите предмет</h2>
 			@if ($subjects and $subjects->count())
-				@foreach ($subjects as $subject)
-					<label class="chooseSubject__item">
-						<a class="chooseGroup__text" href="{{ route('journal.show', ['group' => $group->id, 'subject' => $subject->id]) }}">
+				<div class="chooseSubject__items">
+					@foreach ($subjects as $subject)
+						<a class="chooseGroup__item" href="{{ route('journal.show', ['group' => $group->id, 'subject' => $subject->id]) }}">
 							{{ $subject->title }} ({{ $subject->type }})
 						</a>
-					</label>
-				@endforeach
+					@endforeach
+				</div>
 			@else
 				This group has no your subjects
 			@endif
