@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Group;
+use App\Models\Student;
 use App\Models\User;
 use App\Http\Requests\Group\SaveRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class GroupController extends Controller{
 
@@ -53,12 +56,60 @@ class GroupController extends Controller{
 	}
 
 	public function update(SaveRequest $request, Group $group){
-		if( 
+		$failed = [];
+		
+		foreach ($request->input('students') as $id => $fullname) {
+			if($student = $group->getStudent($id)){
+				if(!$student->update($fullname)){
+					$failed[] = $id;
+					Log::error('User '.Auth::user()->id.' failed to update student '.$id.' due to unexpected error');
+				}
+			}
+			else{
+				Log::warning('User '.Auth::user()->id.' failed to update student '.$id.': student doesn\'t belong to group '.$group->id);
+			}
+		}
+
+		if($request->has('delete')) foreach ($request->input('delete') as $id) {
+			if($student = $group->getStudent($id)){
+				if(!$student->delete()){
+					$failed[] = $id;
+					Log::error('User '.Auth::user()->id.' failed to delete student '.$id.' due to unexpected error');
+				}
+			}
+			else{
+				Log::warning('User '.Auth::user()->id.' failed to delete student '.$id.': student doesn\'t belong to group '.$group->id);
+			}
+		}
+
+		if($request->has('new')) foreach ($request->input('new') as $fullname) {
+			$student = new Student($fullname);
+			$student->group()->save($group);
+			if(!$student->save()){
+				$failed[] = 'new';
+				Log::error('User '.Auth::user()->id.' failed to create student due to unexpected error');
+			}
+		}
+
+		if(
+			$failed or
 			!$group->update($request->only(['title'])) or
 			!$group->setMonitor($request->monitor)
-		) return back()->withErrors('Edit failed');
+		) $failed = true;
+		else $failed = false;
+		
+		if($request->wantsJson()){
+			if($failed) return response()->json([
+				'errors'	=> ['Group updating failed!'],
+			]);
 
-		return back()->with('success', 'Edited successful');
+			return response()->json([
+				'success'	=> 'Group updated!'
+			]);
+		}
+
+		if($failed) return back()->withErrors('Group updating failed!');
+		return back()->with('success', 'Group updated');
 	}
 
 	/**
