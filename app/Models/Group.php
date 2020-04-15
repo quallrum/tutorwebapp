@@ -43,6 +43,12 @@ class Group extends Model{
 			->get('groups.*');
 	}
 
+	public function getStudent($student){
+		$student = $student instanceof Student ? $student->id : $student;
+		$student = Student::where('id', $student)->where('group_id', $this->id)->first();
+		return $student !== null ? $student: false;
+	}
+
 	public function hasStudent($student){
 		$student = $student instanceof Student ? $student->id : $student;
 		return (bool) static::join('students', 'students.group_id', '=', 'groups.id')
@@ -53,7 +59,7 @@ class Group extends Model{
 	}
 
 	public function monitor(){ return $this->belongsTo(User::class); }
-	public function students(){ return $this->hasMany(Student::class); }
+	public function students(){ return $this->hasMany(Student::class)->orderBy('lastname')->orderBy('firstname')->orderBy('fathername'); }
 	public function subjects(){ return $this->belongsToMany(Subject::class); }
 	public function tutors(){ return $this->belongsToMany(User::class, 'group_subject', 'group_id', 'tutor_id'); }
 	// public function journals(){}

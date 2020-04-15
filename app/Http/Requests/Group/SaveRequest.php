@@ -17,6 +17,9 @@ class SaveRequest extends FormRequest{
 			'monitor'	=> [function($attribute, $value, $fail){
 				if(is_numeric($value) and !DB::table('users')->where('id', $value)->count()) $fail('The '.$attribute.' value is invalid');
 			}],
+			'students'	=> ['required', 'array'],
+			'delete'	=> ['nullable', 'array'],
+			'new'		=> ['nullable', 'array'],
 		];
 	}
 }
