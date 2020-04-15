@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Log;
 class GroupController extends Controller{
 
 	public function index(){
+		$this->authorize('group.list');
+
 		$groups = Group::all();
 
 		return view('group.index', [
@@ -21,6 +23,8 @@ class GroupController extends Controller{
 	}
 
 	public function create(){
+		$this->authorize('group.create');
+		
 		$group = new Group;
 		$monitors = User::withRole('monitor');
 
@@ -33,18 +37,25 @@ class GroupController extends Controller{
 	}
 
 	public function store(SaveRequest $request){
+		$this->authorize('group.create');
+
 		$group = Group::create($request->only(['title']));
+
 		if($group->exists)	return redirect()->route('group.edit', ['group' => $group->id])->with('success', 'Created successful');
 		else return back()->withErrors('Creating failed');
 	}
 
 	public function show(Group $group){
+		$this->authorize('group.view');
+
 		return view('group.show', [
 			'group'	=> $group,
 		]);
 	}
 
 	public function edit(Group $group){
+		$this->authorize('group.edit', $group);
+		
 		$monitors = User::withRole('user');
 
 		return view('group.form', [
@@ -56,6 +67,8 @@ class GroupController extends Controller{
 	}
 
 	public function update(SaveRequest $request, Group $group){
+		$this->authorize('group.edit');
+
 		$failed = [];
 		
 		foreach ($request->input('students') as $id => $fullname) {
@@ -92,9 +105,9 @@ class GroupController extends Controller{
 		}
 
 		if(
-			$failed or
-			!$group->update($request->only(['title'])) or
-			!$group->setMonitor($request->monitor)
+			$failed 
+			or !$group->update($request->only(['title'])) 
+			// or !$group->setMonitor($request->monitor)
 		) $failed = true;
 		else $failed = false;
 		

@@ -19,6 +19,7 @@ class AuthServiceProvider extends ServiceProvider
 
     protected $policies = [
         'journal'   => 'App\Policies\JournalPolicy',
+        'group'     => 'App\Policies\GroupPolicy',
     ];
 
     public function registerPolicies(){
@@ -26,11 +27,11 @@ class AuthServiceProvider extends ServiceProvider
             $methods = get_class_methods($policy_class);
             unset($methods[0]);
             foreach ($methods as $ability) {
-                Gate::define($model.'.'.$ability, function($user) use ($model, $ability){
+                Gate::define($model.'.'.$ability, function($user, ...$args) use ($model, $ability){
                     $policy = new $this->policies[$model];
-                    if(method_exists($policy, 'before')) $can = $policy->before($user);
+                    if(method_exists($policy, 'before')) $can = $policy->before($user, ...$args);
                     if(!is_null($can)) return $can;
-                    return $policy->$ability($user);
+                    return $policy->$ability($user, ...$args);
                 });
             }
         }
