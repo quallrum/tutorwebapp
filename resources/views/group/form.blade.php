@@ -35,6 +35,11 @@
 			<div class="groupEdit__heading">
 				<input class="groupEdit__group" type="text" name="title" value="{{ $group->title ?? '' }}"/>
 			</div>
+			<label class="groupEdit__monitor-label" for="groupEditMonitor">Выберите старосту</label>
+			<select class="groupEdit__monitor" name="monitor" id="groupEditMonitor">
+				<option value="" selected="selected"></option>
+				<option value=""></option>
+			</select>
 			@if ($group->students)
 				<div class="groupEdit__table">
 					<div class="groupEdit__table-item groupEdit__table-item--heading">ФИО</div>
@@ -48,7 +53,6 @@
 					@endforeach
 				</div>
 			@endif
-			
 			<div class="groupEdit__addStudent" id="addStudentButton">Добавить студента</div>
 			<button class="groupEdit__submit" type="submit">Сохранить</button>
 		</form>
