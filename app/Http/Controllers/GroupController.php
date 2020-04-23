@@ -97,17 +97,28 @@ class GroupController extends Controller{
 
 		if($request->has('new')) foreach ($request->input('new') as $fullname) {
 			$student = new Student($fullname);
-			$student->group()->save($group);
+			$student->group_id = $group->id;
 			if(!$student->save()){
 				$failed[] = 'new';
 				Log::error('User '.Auth::user()->id.' failed to create student due to unexpected error');
 			}
 		}
 
+		if($request->input('monitor') != $group->ms_id){
+			if($group->hasStudent($request->input('monitor'))){
+				$group->ms_id = $request->input('monitor');
+			}
+			else{
+				$failed[] = 'monitor';
+				Log::error('User '.Auth::user()->id.' failed to make student '.$request->input('monitor').' a monitor: student doesn\'t belong to group '.$group->id);
+			}
+		}
+
+		$group->title = $request->input('title');
+
 		if(
 			$failed 
-			or !$group->update($request->only(['title'])) 
-			// or !$group->setMonitor($request->monitor)
+			or !$group->save() 
 		) $failed = true;
 		else $failed = false;
 		

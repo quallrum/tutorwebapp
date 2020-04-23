@@ -10,23 +10,6 @@
 @endsection
 
 @section('content')
-	{{-- @if ($monitors)
-		<label for="group-title">Group monitor</label>
-		<select name="monitor" id="group-monitor">
-			@if ($group->monitor)
-				<option>No monitor</option>
-				<option disabled selected value="{{ $group->monitor->id }}">{{ $group->monitor->email }}</option>
-			@else
-				<option selected>No monitor</option>
-			@endif
-			@foreach ($monitors as $user)
-				<option value="{{ $user->id }}">{{ $user->email }}</option>
-			@endforeach
-		</select>
-		<br>
-	@else
-		No monitors found. Attach 'monitor' role to user<br>
-	@endif --}}
 	<section class="container-fluid groupEdit">
 		@include('shared.alerts')
 		<form action="{{ $action }}" method="post" name="groupEdit">
@@ -37,8 +20,13 @@
 			</div>
 			<label class="groupEdit__monitor-label" for="groupEditMonitor">Выберите старосту</label>
 			<select class="groupEdit__monitor" name="monitor" id="groupEditMonitor">
-				<option value="" selected="selected"></option>
-				<option value=""></option>
+				@foreach ($group->students as $student)
+					@if ($student->id == $group->ms_id)
+						<option selected value="{{ $student->id }}">{{ $student->fullname }}</option>
+					@else
+						<option value="{{ $student->id }}">{{ $student->fullname }}</option>
+					@endif
+				@endforeach
 			</select>
 			@if ($group->students)
 				<div class="groupEdit__table">
