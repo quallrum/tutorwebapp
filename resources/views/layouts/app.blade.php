@@ -14,10 +14,10 @@
 </head>
 <body>
 	<header class="container-fluid">
-		<div class="container header__content">
-			<div class="header__main">
-				<a href="/"><img class="header__logo" src="/img/logo.svg" alt="logo"/></a>
-				<h1 class="header__heading">Tutor's WEB APP</h1>
+		<div class="container journalHeader__content">
+			<div class="journalHeader__main">
+				<a href="/"><img class="journalHeader__logo" src="/img/logo.svg" alt="logo"/></a>
+				<h1 class="journalHeader__heading">Tutor's WEB APP</h1>
 			</div>
 			<a href="/"><img class="header__home" src="/img/home.svg" alt="home"/></a>
 			@auth
