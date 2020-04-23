@@ -38,10 +38,11 @@
 	<section class="editEmail" id="editEmailSection">
 		<div class="editEmail__window">
 			<h2 class="editEmail__heading">Редактировать Email</h2>
-			<form class="editEmail__form" action="" name="editEmail">
+            <form class="editEmail__form" action="{{ route('edit.email') }}" method="post" name="editEmail">
+                @csrf
 				<label>
 					<p class="editEmail__label">Email</p>
-					<input class="editEmail__input" type="email" name="email" id="editEmailInput" value="example@gmail.com"/>
+					<input class="editEmail__input" type="email" name="email" id="editEmailInput" value="{{ $user->email }}"/>
 				</label>
 				<button class="editEmail__submit" type="submit">Готово</button>
 			</form>
@@ -59,7 +60,7 @@
 				</label>
 				<label class="editPassword__item">
 					<p class="editPassword__text">Повторите новый пароль</p>
-					<input class="editPassword__input" type="password" name="passwordRepeat" id="passwordRepeatInput" autocomplete="new-password"/>
+					<input class="editPassword__input" type="password" name="password_confirmation" id="passwordRepeatInput" autocomplete="new-password"/>
 					<p class="editPassword__capture" id="passwordsAreNotTheSame">Пароли не совпадают.</p>
 				</label>
 				<button class="editPassword__submit" type="submit">Готово</button>
