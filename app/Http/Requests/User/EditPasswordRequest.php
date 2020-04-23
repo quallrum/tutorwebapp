@@ -4,7 +4,7 @@ namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class EditEmailRequest extends FormRequest{
+class EditPasswordRequest extends FormRequest{
 
 	public function authorize(){
 		return true;
@@ -12,7 +12,7 @@ class EditEmailRequest extends FormRequest{
 
 	public function rules(){
 		return [
-			'email' => ['required', 'email:rfc', 'unique:users'],
+			'password'	=> ['required', 'min:8', 'confirmed'],
 		];
 	}
 }

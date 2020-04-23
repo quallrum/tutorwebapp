@@ -24,6 +24,7 @@ Route::group([
 ], function(){
 	Route::get('/', 'HomeController@index')->name('home');
 	Route::post('/editEmail', 'HomeController@editEmail')->name('edit.email');
+	Route::post('/editPassword', 'HomeController@editPassword')->name('edit.password');
 	Route::name('journal.')->prefix('/journal')->group(function(){
 		Route::get('/', 'JournalController@group')->name('group');
 		Route::get('/{group}', 'JournalController@subject')->name('subject');
