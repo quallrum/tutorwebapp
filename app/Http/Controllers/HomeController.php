@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\User\EditEmailRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Group;
@@ -20,5 +21,12 @@ class HomeController extends Controller{
             'role'  => $role,
             'group' => $group,
         ]);
+    }
+
+    public function editEmail(EditEmailRequest $request){
+        $user = Auth::user();
+        
+        if($user->update($request->only('email')))  return response()->json(['success' => 'Updated!'], 200);
+        else                                        return response()->json(['error' => 'Failed!'], 500);
     }
 }
