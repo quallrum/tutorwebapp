@@ -14,9 +14,7 @@ class SaveRequest extends FormRequest{
 	public function rules(){
 		return [
 			'title'		=> ['required', 'string', 'min:4', 'max:10'],
-			'monitor'	=> [function($attribute, $value, $fail){
-				if(is_numeric($value) and !DB::table('users')->where('id', $value)->count()) $fail('The '.$attribute.' value is invalid');
-			}],
+			'monitor'	=> ['required', 'exists:students,id'],
 			'students'	=> ['required', 'array'],
 			'delete'	=> ['nullable', 'array'],
 			'new'		=> ['nullable', 'array'],

@@ -31,6 +31,9 @@
                 @can('journal.changeGroup')
                     <a class="home__link" href="{{ route('journal.group') }}">Выбрать группу</a>
                 @endcan
+				@can('group.edit')
+					<a class="home__link" href="{{ route('group.index') }}">Управление группами</a>
+				@endcan
                 {{-- <a class="home__link" href="">Выбрать предмет</a> --}}
             </div>
 		</div>
