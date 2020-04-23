@@ -18,11 +18,11 @@ class JournalPolicy{
     }
 
     public function changeSubject($user){
-        return $user->hasRole(['tutor', 'monitor']);
+        return $user->hasRole(['tutor', 'monitor', 'group']);
     }
 
     public function view($user){
-        return $user->hasRole(['tutor', 'monitor']);
+        return $user->hasRole(['tutor', 'monitor', 'group']);
     }
 
     public function edit($user){
