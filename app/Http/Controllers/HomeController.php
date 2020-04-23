@@ -9,20 +9,16 @@ use App\Models\Group;
 
 class HomeController extends Controller{
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
     public function index(){
         $user = Auth::user();
+        $role = $user->role;
 
-        if($user->role->name == 'tutor') return redirect()->route('journal.group');
-        if($user->role->name == 'monitor'){
-            $group = Group::where('monitor_id', $user->id)->pluck('id')->first();
-            return redirect()->route('journal.subject', ['group' => $group]);
-        }
+        $group = $role->name == 'group' ? Group::where('user_id', $user->id)->first() : null;
 
-        return view('home');
+        return view('home')->with([
+            'user'  => $user,
+            'role'  => $role,
+            'group' => $group,
+        ]);
     }
 }
