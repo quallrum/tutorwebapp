@@ -52,7 +52,8 @@
 	<section class="editPassword" id="editPasswordSection">
 		<div class="editPassword__window">
 			<h2 class="editPassword__heading">Редактировать пароль</h2>
-			<form class="editPassword__form" action="" name="editPassword">
+            <form class="editPassword__form" action="{{ route('edit.password') }}" method="post" name="editPassword">
+                @csrf
 				<label class="editPassword__item">
 					<p class="editPassword__text">Новый пароль</p>
 					<input class="editPassword__input" type="password" name="password" id="passwordInput" autocomplete="new-password"/>
