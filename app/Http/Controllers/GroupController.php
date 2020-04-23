@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Group;
 use App\Models\Student;
 use App\Models\User;
+use App\Models\Journal;
 use App\Http\Requests\Group\SaveRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -83,7 +84,7 @@ class GroupController extends Controller{
 			}
 		}
 
-		if($request->has('delete')) foreach ($request->input('delete') as $id) {
+		if($request->has('delete')) foreach ($request->input('delete') as $id => $null) {
 			if($student = $group->getStudent($id)){
 				if(!$student->delete()){
 					$failed[] = $id;
@@ -98,7 +99,34 @@ class GroupController extends Controller{
 		if($request->has('new')) foreach ($request->input('new') as $fullname) {
 			$student = new Student($fullname);
 			$student->group_id = $group->id;
-			if(!$student->save()){
+			if($student->save()){
+				// Create empty records in journal for new student
+
+				// Check this request for optimization
+				// Ideally it should add smth like 'LIMIT 1' to sql query in order to reduce response size
+				$example = $group->students()->first();
+
+				foreach($group->subjects as $subject){
+					$records = Journal::where('subject_id', $subject->id)
+										->where('student_id', $example->id)
+										->pluck('created_at');
+					foreach ($records as $date) {
+						$record = new Journal([
+							'subject_id'	=> $subject->id,
+							'student_id'	=> $student->id,
+							'value'			=> 1
+						]);
+						$record->created_at = $date->format('Y-m-d H:i:s');
+						$record->updated_at = $date->format('Y-m-d H:i:s');
+						if(!$record->save(['timestapms' => false])){
+							$failed[] = 'new';
+							Log::error('User '.Auth::user()->id.' failed to create a new record for new student '.$student->id.' due to unexpected error.'.PHP_EOL.
+								'Subject: '.$subject->id.', tried to use date '.$date->format('Y-m-d H:i:s').' for record');
+						};
+					}
+				}
+			}
+			else {
 				$failed[] = 'new';
 				Log::error('User '.Auth::user()->id.' failed to create student due to unexpected error');
 			}
