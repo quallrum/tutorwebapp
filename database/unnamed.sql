@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Апр 24 2020 г., 00:44
+-- Время создания: Апр 24 2020 г., 22:22
 -- Версия сервера: 5.7.23
 -- Версия PHP: 7.2.10
 
@@ -3923,8 +3923,8 @@ ALTER TABLE `group_subject`
 --
 ALTER TABLE `journals`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_journals_student_id` (`student_id`),
-  ADD KEY `fk_journals_subject_id` (`subject_id`);
+  ADD KEY `fk_journals_subject_id` (`subject_id`),
+  ADD KEY `fk_journals_student_id` (`student_id`);
 
 --
 -- Индексы таблицы `migrations`
@@ -4049,7 +4049,7 @@ ALTER TABLE `group_subject`
 -- Ограничения внешнего ключа таблицы `journals`
 --
 ALTER TABLE `journals`
-  ADD CONSTRAINT `fk_journals_student_id` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_journals_student_id` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_journals_subject_id` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`id`) ON UPDATE CASCADE;
 
 --
