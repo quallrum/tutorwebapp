@@ -86,7 +86,7 @@ class JournalController extends Controller{
 		
 		if($request->new){
 			$today = (new \Datetime)->format('Y-m-d');
-			$last = Journal::lastDate($group->students[0], $subject);
+			$last = Journal::lastDate($group->students()->first(), $subject);
 
 			if($today != $last){
 				foreach ($request->new as $id => $value) {

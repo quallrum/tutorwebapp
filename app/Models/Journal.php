@@ -38,7 +38,7 @@ class Journal extends Model{
 	}
 
 	public static function table(Group $group, Subject $subject){
-		$students = $group->students->pluck('id')->all();
+		$students = $group->students()->pluck('id')->all();
 		$journal  = [];
 
 		foreach ($students as $id) {
