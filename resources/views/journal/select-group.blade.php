@@ -9,7 +9,7 @@
 @endsection
 
 @section('content')
-	<section class="container chooseGroup">
+	<section class="container-fluid chooseGroup">
 		@include('shared.alerts')
 		<div class="chooseGroup__window">
 			<h2 class="chooseGroup__heading">Выберите группу</h2>
@@ -20,8 +20,9 @@
 					@endforeach
 				</div>
 			@else
-				You have no groups
+				<p class="chooseGroup__null">У вас пока нету групп</p>
 			@endif
+			<a class="chooseGroup__back" href="{{ route('home') }}">Назад</a>
 		</div>
 	</section>
 @endsection
