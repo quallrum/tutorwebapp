@@ -1,8 +1,28 @@
-@if ($groups)
-	@foreach ($groups as $group)
-		<a href="{{ route('group.show', ['group' => $group->id]) }}">{{ $group->title }}</a>
-		<a href="{{ route('group.edit', ['group' => $group->id]) }}">edit</a><br>
-	@endforeach
-@else
-No groups found
-@endif
+@extends('layouts.app')
+
+@section('head')
+	<link rel="stylesheet" href="/css/main.min.css"/>
+@endsection
+
+@section('scripts')
+	<script src="/js/chooseGroup.js"></script>
+@endsection
+
+@section('content')
+	<section class="container-fluid chooseGroup">
+		@include('shared.alerts')
+		<div class="chooseGroup__window">
+			<h2 class="chooseGroup__heading">Выберите группу</h2>
+			@if ($groups and $groups->count())
+				<div class="chooseGroup__items">
+					@foreach ($groups as $group)
+						<a class="chooseGroup__item" href="{{ route('group.edit', ['group' => $group->id]) }}">{{ $group->title }}</a>
+					@endforeach
+				</div>
+			@else
+				<p class="chooseGroup__null">Нет созданных групп</p>
+			@endif
+			<a class="chooseGroup__back" href="{{ route('home') }}">Назад</a>
+		</div>
+	</section>
+@endsection

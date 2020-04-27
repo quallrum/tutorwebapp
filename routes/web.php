@@ -31,7 +31,7 @@ Route::group([
 		Route::get('/{group}/{subject}', 'JournalController@show')->name('show');
 		Route::post('/{group}/{subject}', 'JournalController@update');
 	});
-	Route::resource('group', 'GroupController');
+	Route::resource('group', 'GroupController')->except(['show']);
 	Route::post('/group/{group}/email', 'GroupController@updateEmail')->name('group.email');
 	Route::post('/group/{group}/password', 'GroupController@updatePassword')->name('group.password');
 });

@@ -30,13 +30,11 @@ class GroupController extends Controller{
 		$this->authorize('group.create');
 		
 		$group = new Group;
-		$monitors = User::withRole('monitor');
 
 		return view('group.form', [
 			'action'	=> route('group.store'),
 			'method'	=> 'post',
 			'group'		=> $group,
-			'monitors'	=> $monitors,
 		]);
 	}
 
@@ -47,14 +45,6 @@ class GroupController extends Controller{
 
 		if($group->exists)	return redirect()->route('group.edit', ['group' => $group->id])->with('success', 'Created successful');
 		else return back()->withErrors('Creating failed');
-	}
-
-	public function show(Group $group){
-		$this->authorize('group.view');
-
-		return view('group.show', [
-			'group'	=> $group,
-		]);
 	}
 
 	public function edit(Group $group){

@@ -17,10 +17,6 @@ class GroupPolicy{
 		return false;
 	}
 
-	public function view($user){
-		return false;
-	}
-
 	public function create($user){
 		return false;
 	}
