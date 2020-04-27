@@ -31,9 +31,9 @@
                 @can('journal.changeGroup')
                     <a class="home__link" href="{{ route('journal.group') }}">Выбрать группу</a>
                 @endcan
-				@can('group.edit')
+				@if($role->name == 'admin')
 					<a class="home__link" href="{{ route('group.index') }}">Управление группами</a>
-				@endcan
+				@endif
                 {{-- <a class="home__link" href="">Выбрать предмет</a> --}}
             </div>
 		</div>
