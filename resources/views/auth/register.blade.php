@@ -10,7 +10,7 @@
 @endsection
 
 @section('content')
-	<section class="registration container">
+	<section class="registration container-fluid">
 		@include('shared.alerts')
 		<div class="register" id="registerWindow">
 			<h2 class="register__heading">Создать аккаунт</h2><a class="register__enter" href="" id="registerLinkToEnter">вход</a>
@@ -31,8 +31,8 @@
 					<input type="password" name="password" placeholder="Password" id="registerPassword" autocomplete="new-password"/>
 					<div class="register__tick--password"></div>
 					<div class="register__wrapUnderInput register__wrapUnderInput--password">
-						<p class="register__warning register__warning--password" id="registerWarningPassword">Пароль должен содержать не менее 4 символов.</p>
-						<button class="register__submitButton" type="submit" id="registerSubmit">Далее</button>
+						<p class="register__warning register__warning--password" id="registerWarningPassword">Пароль должен содержать не менее 8 символов.</p>
+						<button class="register__submitButton" type="submit" id="registerSubmit">Создать</button>
 					</div>
 				</label>
 			</form>

@@ -11,28 +11,43 @@
 @section('content')
 	<section class="container-fluid journal">
 		@include('shared.alerts')
-		<div class="journal__headings">
-			<h2 class="journal__headings-heading">{{ $group->title }}</h2>
-			<p class="journal__headings-subject">{{ $subject->title }} ({{ $subject->type }})</p>
+		<div class="journal__group">
+			<h2 class="journal__group-heading">{{ $group->title }}</h2>
+			@can('group.edit', $group)
+				<a class="journal__group-button" href="{{ route('group.edit', ['group'=>$group->id]) }}">Изменить группу</a>
+			@endcan
 		</div>
-		{{-- <div class="journal__addStudentPopUp">
-			<h2 class="journal__addStudentPopUp-heading">Введите имя студента</h2>
-			<input class="journal__addStudentPopUp-input" type="text" id="nameOfNewStudent"/>
-			<button class="journal__addStudentPopUp-button" id="submitNewStudentName">Готово</button>
-			<div class="journal__addStudentPopUp-cross" id="crossAddNewStudent">X</div>
-		</div> --}}
-		{{-- @can('edit', 'App\Models\Journal') --}}
+		<div class="journal__subject">
+			<h2 class="journal__subject-heading">{{ $subject->title }}</h2>
+			<div class="
+				@switch($subject->type)
+					@case('Лек') lecture @break 
+					@case('Лаб') laboratory @break 
+					@case('Прак') practic @break 
+				@endswitch
+			"></div>
+			{{-- <a class="journal__subject-button">Изменить предмет</a> --}}
+		</div>
 		@can('journal.edit')
-			<div class="journal__addColumn" id="addColumn">Добавить колонку</div>
 			<form action="" method="post" name="journal">
-				@csrf
+			@csrf
 		@endcan
 			<div class="journal__table">
 				<div class="journal__table-line">
-					<div class="journal__table-item">ФИО</div>
-					@foreach ($header as $date)
-						<div class="journal__table-item journal__table-item--date" style="overflow: hidden;">{{ $date }}</div>
-					@endforeach
+					<div class="journal__table-item">ФИО</div>					
+					@if($user->can('journal.edit'))
+						@foreach ($header as $date)
+							<div class="journal__table-item journal__table-item--date" style="overflow: hidden;">
+								{{ $date }}
+								<img src="/img/bin.svg" alt="del" class="delete">
+							</div>
+						@endforeach
+						<div class="journal__addColumn" id="addColumn"><img src="/img/plusSign.svg" alt="add"/></div>
+					@else
+						@foreach ($header as $date)
+							<div class="journal__table-item journal__table-item--date" style="overflow: hidden;">{{ $date }}</div>
+						@endforeach
+					@endif
 				</div>
 				@foreach ($group->students as $student)
 					<div class="journal__table-line">
@@ -60,6 +75,7 @@
 		@can('journal.edit')
 			<div class="journal__buttons">
 				<button class="journal__submit" type="submit">сохранить</button>
+				<div class="journal__reload" id="reloadButton">отменить</div>
 			</div>
 			</form>
 		@endcan

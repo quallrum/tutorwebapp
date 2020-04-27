@@ -12,11 +12,11 @@
 @section('content')
 	<section class="container-fluid groupEdit">
 		@include('shared.alerts')
-		<form action="{{ $action }}" method="post" name="groupEdit">
+		<form class="groupEdit__form" action="{{ $action }}" method="post" name="groupEdit">
 			@csrf
 			@method($method)
 			<div class="groupEdit__heading">
-				<input class="groupEdit__group" type="text" name="title" value="{{ $group->title ?? '' }}"/>
+				<input class="groupEdit__group" type="text" name="title" value="{{ $group->title ?? '' }}" autofocus="autofocus"/>
 			</div>
 			<label class="groupEdit__monitor-label" for="groupEditMonitor">Выберите старосту</label>
 			<select class="groupEdit__monitor" name="monitor" id="groupEditMonitor">

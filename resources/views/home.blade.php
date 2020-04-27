@@ -11,7 +11,7 @@
 @endsection
 
 @section('content')
-	<section class="home">
+	<section class="home container-fluid">
 		@include('shared.alerts')
 		<div class="home__window">
 			<h2 class="home__heading">Профиль</h2>
@@ -60,7 +60,7 @@
 				<label class="editPassword__item">
 					<p class="editPassword__text">Новый пароль</p>
 					<input class="editPassword__input" type="password" name="password" id="passwordInput" autocomplete="new-password"/>
-					<p class="editPassword__capture" id="passwordLength">Пароль должен содержать не менее 4 символов.</p>
+					<p class="editPassword__capture" id="passwordLength">Пароль должен содержать не менее 8 символов.</p>
 				</label>
 				<label class="editPassword__item">
 					<p class="editPassword__text">Повторите новый пароль</p>
