@@ -31,7 +31,7 @@ class JournalController extends Controller{
 		if($user->role->name == 'admin' 
 			or $user->role->name == 'monitor'
 			or $user->role->name == 'group')	$subjects = Subject::ofGroup($group)->get();
-		else if($user->role->name) 				$subjects = Subject::ofGroup($group)->ofTutor($user)->get();
+		else if($user->role->name == 'tutor')	$subjects = Subject::ofGroup($group)->ofTutor($user)->get();
 		else									$subjects = [];
 		
 		return view('journal.select-subject', [
