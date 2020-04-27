@@ -47,48 +47,52 @@
 				<div class="groupEdit__reload" id="reloadButton">отменить</div>
 			</div>
 		</form>
-		<div class="container-fluid groupData">
-			<h2 class="groupData__heading">Данные аккаунта группы</h2>
-			<div class="groupData__email">
-				<p class="home__email-text">{{ $group->user->email }}</p>
-				<img class="groupData__email-img" src="/img/profileEdit.svg" alt="Редактировать" id="editEmailButton"/>
-			</div>
-			<div class="groupData__password">
-				<p class="home__password-text">●●●●●●●●●●</p>
-				<img class="groupData__password-img" src="/img/profileEdit.svg" alt="Редактировать" id="editPasswordButton"/>
-			</div>
-			<div class="groupData__editEmail" id="editEmailSection">
-				<div class="groupData__editEmail-window">
-					<h2 class="groupData__editEmail-heading">Редактировать Email</h2>
-					<form class="groupData__editEmail-form" action="" name="editEmail">
-						<label>
-							<p class="groupData__editEmail-label">Email</p>
-							<input class="groupData__editEmail-input" type="email" name="email" id="editEmailInput" value="{{ $group->user->email }}"/>
-						</label>
-						<button class="groupData__editEmail-submit" type="submit">Готово</button>
-					</form>
-					<div class="groupData__editEmail-cross" id="editEmailCross">&#9587</div>
+		@if ($group->exists)
+			<div class="container-fluid groupData">
+				<h2 class="groupData__heading">Данные аккаунта группы</h2>
+				<div class="groupData__email">
+					<p class="home__email-text">{{ $group->user->email }}</p>
+					<img class="groupData__email-img" src="/img/profileEdit.svg" alt="Редактировать" id="editEmailButton"/>
+				</div>
+				<div class="groupData__password">
+					<p class="home__password-text">●●●●●●●●●●</p>
+					<img class="groupData__password-img" src="/img/profileEdit.svg" alt="Редактировать" id="editPasswordButton"/>
+				</div>
+				<div class="groupData__editEmail" id="editEmailSection">
+					<div class="groupData__editEmail-window">
+						<h2 class="groupData__editEmail-heading">Редактировать Email</h2>
+						<form class="groupData__editEmail-form" action="{{ route('group.email', ['group'=>$group->id]) }}" method="post" name="editEmail">
+							@csrf
+							<label>
+								<p class="groupData__editEmail-label">Email</p>
+								<input class="groupData__editEmail-input" type="email" name="email" id="editEmailInput" value="{{ $group->user->email }}"/>
+							</label>
+							<button class="groupData__editEmail-submit" type="submit">Готово</button>
+						</form>
+						<div class="groupData__editEmail-cross" id="editEmailCross">&#9587</div>
+					</div>
+				</div>
+				<div class="groupData__editPassword" id="editPasswordSection">
+					<div class="groupData__editPassword-window">
+						<h2 class="groupData__editPassword-heading">Редактировать пароль</h2>
+						<form class="groupData__editPassword-form" action="{{ route('group.password', ['group'=>$group->id]) }}" method="post" name="editPassword">
+							@csrf
+							<label class="groupData__editPassword-item">
+								<p class="groupData__editPassword-text">Новый пароль</p>
+								<input class="groupData__editPassword-input" type="password" name="password" id="passwordInput" autocomplete="new-password"/>
+								<p class="groupData__editPassword-capture" id="passwordLength">Пароль должен содержать не менее 8 символов.</p>
+							</label>
+							<label class="groupData__editPassword-item">
+								<p class="groupData__editPassword-text">Повторите новый пароль</p>
+								<input class="groupData__editPassword-input" type="password" name="password_confirmation" id="passwordRepeatInput" autocomplete="new-password"/>
+								<p class="groupData__editPassword-capture" id="passwordsAreNotTheSame">Пароли не совпадают.</p>
+							</label>
+							<button class="groupData__editPassword-submit" type="submit">Готово</button>
+						</form>
+						<div class="groupData__editPassword-cross" id="editPasswordCross">&#9587</div>
+					</div>
 				</div>
 			</div>
-			<div class="groupData__editPassword" id="editPasswordSection">
-				<div class="groupData__editPassword-window">
-					<h2 class="groupData__editPassword-heading">Редактировать пароль</h2>
-					<form class="groupData__editPassword-form" action="" name="editPassword">
-						<label class="groupData__editPassword-item">
-							<p class="groupData__editPassword-text">Новый пароль</p>
-							<input class="groupData__editPassword-input" type="password" name="password" id="passwordInput" autocomplete="new-password"/>
-							<p class="groupData__editPassword-capture" id="passwordLength">Пароль должен содержать не менее 8 символов.</p>
-						</label>
-						<label class="groupData__editPassword-item">
-							<p class="groupData__editPassword-text">Повторите новый пароль</p>
-							<input class="groupData__editPassword-input" type="password" name="password_confirmation" id="passwordRepeatInput" autocomplete="new-password"/>
-							<p class="groupData__editPassword-capture" id="passwordsAreNotTheSame">Пароли не совпадают.</p>
-						</label>
-						<button class="groupData__editPassword-submit" type="submit">Готово</button>
-					</form>
-					<div class="groupData__editPassword-cross" id="editPasswordCross">&#9587</div>
-				</div>
-			</div>
-		</div>
+		@endif
 	</section>
 @endsection

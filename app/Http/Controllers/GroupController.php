@@ -6,9 +6,12 @@ use App\Models\Group;
 use App\Models\Student;
 use App\Models\User;
 use App\Models\Journal;
-use App\Http\Requests\Group\SaveRequest;
+use App\Http\Requests\Group\UpdateRequest;
+use App\Http\Requests\Group\UpdateEmailRequest;
+use App\Http\Requests\Group\UpdatePasswordRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
 class GroupController extends Controller{
@@ -162,6 +165,23 @@ class GroupController extends Controller{
 
 		if($failed) return back()->withErrors('Group updating failed!');
 		return back()->with('success', 'Group updated');
+	}
+
+	public function updateEmail(UpdateEmailRequest $request, Group $group){
+		$this->authorize('group.edit');
+		$user = $group->user;
+		
+		if($user->update($request->only('email'))) 	return response()->json(['success' => 'Updated!'], 200);
+		else                                       	return response()->json(['error' => 'Failed!'], 500);
+	}
+
+	public function updatePassword(UpdatePasswordRequest $request, Group $group){
+		$this->authorize('group.edit');
+		$user = $group->user;
+		$user->password = Hash::make($request->input('password'));
+		
+		if($user->save())   return response()->json(['success' => 'Updated!'], 200);
+		else                return response()->json(['error' => 'Failed!'], 500);
 	}
 
 	/**
