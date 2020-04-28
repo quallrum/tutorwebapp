@@ -10,7 +10,6 @@
 
 @section('content')
 	<section class="container-fluid chooseSubject">
-		@include('shared.alerts')
 		<div class="chooseSubject__window">
 			<h2 class="chooseSubject__heading">Выберите предмет</h2>
 			@if ($subjects and $subjects->count())

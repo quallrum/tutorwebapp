@@ -12,13 +12,12 @@
 
 @section('content')
 	<section class="home container-fluid">
-		@include('shared.alerts')
 		<div class="home__window">
 			<h2 class="home__heading">Профиль</h2>
             <p class="home__role">Вы вошли как {{ mb_strtolower($role->title) }}</p>
             @if ($role->name != 'group')
                 <div class="home__email">
-                    <p class="home__email-text">{{ $user->email }}</p><img class="home__email-img" src="/img/profileEdit.svg" alt="Редактировать" id="editEmailButton"/>
+                    <p class="home__email-text" id="emailText">{{ $user->email }}</p><img class="home__email-img" src="/img/profileEdit.svg" alt="Редактировать" id="editEmailButton"/>
                 </div>
                 <div class="home__password">
                     <p class="home__password-text">●●●●●●●●●●</p><img class="home__password-img" src="/img/profileEdit.svg" alt="Редактировать" id="editPasswordButton"/>
