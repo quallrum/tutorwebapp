@@ -5,7 +5,7 @@ namespace App\Http\Requests\Group;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\DB;
 
-class SaveRequest extends FormRequest{
+class UpdateRequest extends FormRequest{
 
 	public function authorize(){
 		return true;
