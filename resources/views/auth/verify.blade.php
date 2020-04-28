@@ -10,7 +10,6 @@
 
 @section('content')
 	<section class="container-fluid emailVerification">
-		@include('shared.alerts')
 		<div class="emailVerification__window">
 			<h2 class="emailVerification__heading">Подтверждение Email</h2>
 			<div class="emailVerification__textBlock">

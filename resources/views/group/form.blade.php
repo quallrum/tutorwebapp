@@ -11,7 +11,6 @@
 
 @section('content')
 	<section class="container-fluid groupEdit">
-		@include('shared.alerts')
 		<form class="groupEdit__form" action="{{ $action }}" method="post" name="groupEdit">
 			@csrf
 			@method($method)
@@ -51,7 +50,7 @@
 			<div class="container-fluid groupData">
 				<h2 class="groupData__heading">Данные аккаунта группы</h2>
 				<div class="groupData__email">
-					<p class="home__email-text">{{ $group->user->email }}</p>
+					<p class="home__email-text" id="groupDataEmail">{{ $group->user->email }}</p>
 					<img class="groupData__email-img" src="/img/profileEdit.svg" alt="Редактировать" id="editEmailButton"/>
 				</div>
 				<div class="groupData__password">

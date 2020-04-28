@@ -10,7 +10,6 @@
 
 @section('content')
 	<section class="container-fluid journal">
-		@include('shared.alerts')
 		<div class="journal__group">
 			<h2 class="journal__group-heading">{{ $group->title }}</h2>
 			@can('group.edit', $group)

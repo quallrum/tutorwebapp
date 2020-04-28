@@ -33,6 +33,9 @@
 			</div>
 		</div>
 	</header>
+	<section class="container">
+		@include('shared.alerts')
+	</section>
 	@yield('content')
 	<script src="/js/alerts.js"></script>
     @yield('scripts')

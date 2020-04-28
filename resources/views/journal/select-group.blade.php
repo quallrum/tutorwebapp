@@ -10,7 +10,6 @@
 
 @section('content')
 	<section class="container-fluid chooseGroup">
-		@include('shared.alerts')
 		<div class="chooseGroup__window">
 			<h2 class="chooseGroup__heading">Выберите группу</h2>
 			@if ($groups and $groups->count())

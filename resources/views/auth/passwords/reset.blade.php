@@ -10,7 +10,6 @@
 
 @section('content')
     <section class="container-fluid setNewPassword">
-		@include('shared.alerts')
 		<div class="setNewPassword__window">
 			<h2 class="setNewPassword__heading">Установите новый пароль</h2>
 			<form class="setNewPassword__form" action="{{ route('password.update') }}" method="post" name="setNewPassword">

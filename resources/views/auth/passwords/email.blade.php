@@ -10,7 +10,6 @@
 
 @section('content')
     <section class="container-fluid forgetPassword">
-		@include('shared.alerts')
 		<div class="forgetPassword__window">
 			<h2 class="forgetPassword__heading">Восстановление пароля</h2>
 			<form class="forgetPassword__form" action="{{ route('password.email') }}" method="post" name="forgetPassword">
