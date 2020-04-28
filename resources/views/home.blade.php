@@ -24,9 +24,12 @@
                 </div>
             @endif
 			<div class="home__links">
-                @if ($role->name == 'group')
-                    <a class="home__link" href="{{ route('journal.subject', ['group' => $group->id]) }}">Смотреть журнал</a>
-                @endif
+                @if ($role->name == 'group' || $role->name == 'monitor')
+                    <a class="home__link" href="{{ route('journal.subject', ['group' => $group->id]) }}">Журнал</a>
+				@endif
+				@if ($role->name == 'monitor')
+					<a class="home__link" href="{{ route('group.edit', ['group' => $group->id]) }}">Управление группой</a>
+				@endif
                 @can('journal.changeGroup')
                     <a class="home__link" href="{{ route('journal.group') }}">Выбрать группу</a>
                 @endcan

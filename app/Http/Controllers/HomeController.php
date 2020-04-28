@@ -16,7 +16,9 @@ class HomeController extends Controller{
         $user = Auth::user();
         $role = $user->role;
 
-        $group = $role->name == 'group' ? Group::where('user_id', $user->id)->first() : null;
+        if($role->name == 'monitor')    $group = Group::where('monitor_id', $user->id)->first();
+        else if($role->name == 'group') $group = Group::where('user_id', $user->id)->first();
+        else                            $group = null;
 
         return view('home')->with([
             'user'  => $user,
