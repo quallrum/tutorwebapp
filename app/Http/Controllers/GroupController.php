@@ -38,7 +38,7 @@ class GroupController extends Controller{
 		]);
 	}
 
-	public function store(SaveRequest $request){
+	public function store(UpdateRequest $request){
 		$this->authorize('group.create');
 
 		$group = Group::create($request->only(['title']));
@@ -60,8 +60,8 @@ class GroupController extends Controller{
 		]);
 	}
 
-	public function update(SaveRequest $request, Group $group){
-		$this->authorize('group.edit');
+	public function update(UpdateRequest $request, Group $group){
+		$this->authorize('group.edit', $group);
 
 		$failed = [];
 		
@@ -158,7 +158,7 @@ class GroupController extends Controller{
 	}
 
 	public function updateEmail(UpdateEmailRequest $request, Group $group){
-		$this->authorize('group.edit');
+		$this->authorize('group.edit', $group);
 		$user = $group->user;
 		
 		if($user->update($request->only('email'))) 	return response()->json(['success' => 'Updated!'], 200);
@@ -166,7 +166,7 @@ class GroupController extends Controller{
 	}
 
 	public function updatePassword(UpdatePasswordRequest $request, Group $group){
-		$this->authorize('group.edit');
+		$this->authorize('group.edit', $group);
 		$user = $group->user;
 		$user->password = Hash::make($request->input('password'));
 		
