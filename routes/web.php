@@ -32,7 +32,13 @@ Route::group([
 		Route::post('/{group}/{subject}', 'JournalController@update');
 	});
 	Route::resource('group', 'GroupController')->except(['show']);
-	Route::post('/group/{group}/email', 'GroupController@updateEmail')->name('group.email');
-	Route::post('/group/{group}/password', 'GroupController@updatePassword')->name('group.password');
+	Route::prefix('/group/{group}')->name('group.')->group(function(){
+		Route::post('/subjectTutors', 'GroupController@subjectTutors')->name('subjectTutors');
+		Route::post('/addSubject', 'GroupController@addSubject')->name('addSubject');
+		Route::post('/deleteSubject', 'GroupController@deleteSubject')->name('deleteSubject');
+		Route::post('/email', 'GroupController@updateEmail')->name('email');
+		Route::post('/password', 'GroupController@updatePassword')->name('password');
+	});
+	
 });
 

@@ -13,7 +13,13 @@
 @endsection
 
 @section('content')
-	<section class="container-fluid groupEdit">
+	<section class="container-fluid">
+		<ul class="nav nav-tabs">
+			<li class="nav-item"><a class="nav-link active" href="#groupEdit" data-toggle="tab" role="tab">Редактирование группы</a></li>
+			<li class="nav-item"><a class="nav-link" href="#groupSubjects" data-toggle="tab" role="tab">Редактирование предметов группы</a></li>
+		</ul>
+	</section>
+	<section class="container-fluid groupEdit" id="groupEdit">
 		<form class="groupEdit__form" action="{{ $action }}" method="post" name="groupEdit">
 			@csrf
 			@method($method)
@@ -97,4 +103,62 @@
 			</div>
 		@endif
 	</section>
+	@if ($group->exists)
+		<section class="groupSubjects" id="groupSubjects">
+			<!-- data-actionToDelete-->
+			<form class="groupSubjects__subjects" action="{{ route('group.addSubject', ['group' => $group->id]) }}" method="post" name="subjectsPerGroupForm" data-actionToDelete="{{ route('group.deleteSubject', ['group' => $group->id]) }}">
+				@csrf
+				<div class="groupSubjects__table" id="subjectPerGroupTable">
+					<div class="groupSubjects__table-item groupSubjects__table-item--heading">Предметы группы</div>
+					@if ($group->subjects)
+						@foreach ($group->subjects as $subject)
+							<div class="groupSubjects__table-item" data-id="{{ $subject->id }}">
+								<div class="
+									@switch($subject->type)
+										@case('Лек') lecture @break 
+										@case('Лаб') laboratory @break 
+										@case('Прак') practic @break 
+									@endswitch
+								"></div>
+								<p class="name">{{ $subject->title }}</p>
+								@if ($subject->tutors)
+									<select class="select" name="subject">
+										@foreach ($subject->tutors as $tutor)
+											@if ($subjectTutor[$subject->id] == $tutor->user->id)
+												<option selected="selected" value="{{ $tutor->user->id }}">{{ $tutor->shortFullname }}</option>
+											@else
+												<option value="{{ $tutor->user->id }}">{{ $tutor->shortFullname }}</option>
+											@endif
+										@endforeach
+									</select>
+								@endif
+								<img class="groupSubjects__table-item-delete" src="/img/bin.svg" alt="delete"/>
+							</div>
+						@endforeach
+					@endif
+				</div>
+			</form>
+			<form class="groupSubjects__allSubjects" action="{{ route('group.subjectTutors', ['group' => $group->id]) }}" method="post" name="allSubjectsForm">
+				@csrf
+				<div class="groupSubjects__table" id="allSubjectsTable">
+					<div class="groupSubjects__table-item groupSubjects__table-item--heading">Все предметы</div>
+					@if ($subjects->count())
+						@foreach ($subjects as $subject)
+							<div class="groupSubjects__table-item" data-id="{{ $subject->id }}">
+								<div class="
+									@switch($subject->type)
+										@case('Лек') lecture @break 
+										@case('Лаб') laboratory @break 
+										@case('Прак') practic @break 
+									@endswitch
+								"></div>
+								<p class="name name--allSubjects">{{ $subject->title }}</p>
+								<img class="groupSubjects__table-item-add" src="/img/plusSign.svg" alt="add"/>
+							</div>
+						@endforeach					
+					@endif
+				</div>
+			</form>
+		</section>
+	@endif
 @endsection
