@@ -22,6 +22,12 @@ class Tutor extends Model{
 				mb_substr($this->attributes['fathername'], 0, 1).'.';
 	}
 
+	public function checkFullname(){
+		return 	$this->attributes['firstname'] != '' and
+				$this->attributes['lastname'] != '' and
+				$this->attributes['fathername'] != '';
+	}
+
 	public function user(){ return $this->belongsTo(User::class); }
 
 }
