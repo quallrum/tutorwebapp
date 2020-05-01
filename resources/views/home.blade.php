@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
+@section('title', 'Главная')
+
 @section('head')
-    <title>Tutor Web API</title>
 	<link rel="stylesheet" href="/css/main.min.css"/>
 @endsection
 

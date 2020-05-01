@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Восстановление пароля')
+
 @section('head')
     <link rel="stylesheet" href="/css/main.min.css"/>
 @endsection
