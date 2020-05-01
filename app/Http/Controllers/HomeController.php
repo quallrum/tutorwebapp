@@ -22,14 +22,18 @@ class HomeController extends Controller{
         else                            $group = null;
 
         if($role->name == 'tutor')  $tutor = Tutor::find($user->id);
-        else                        $tutor = null;
-
-        return view('home')->with([
+		else                        $tutor = null;
+		
+		$view = view('home')->with([
             'user'  => $user,
             'role'  => $role,
             'group' => $group,
             'tutor' => $tutor,
-        ]);
+		]);
+
+		if($role->name == 'tutor' and !$tutor->checkFullname()) $view->withErrors(['fullname' => 'Заполните свои данные!']);
+		
+		return $view;
     }
 
     public function editFullname(Request $request){

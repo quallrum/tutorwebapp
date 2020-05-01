@@ -1,5 +1,5 @@
 @if ($errors->any())
-	<div class="alert alert--error" id="alertError">
+	<div class="alert alert--error" id="alertError" style="display: block;">
 		@foreach ($errors->all() as $msg)
 			<p class="alert__text alert__text--error" id="alertErrorText">{{ $msg }}</p>
 		@endforeach
@@ -12,7 +12,7 @@
 	</div>
 @endif
 @if (Session::has('success'))
-	<div class="alert alert--success" id="alertSuccess">
+	<div class="alert alert--success" id="alertSuccess" style="display: block;">
 		<p class="alert__text alert__text--success" id="alertSuccessText">{{ Session::pull('success') }}</p>
 		<div class="alert__cross alert__cross--success" id="alertSuccessCross">&#9587;</div>
 	</div>
