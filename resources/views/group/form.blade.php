@@ -7,6 +7,7 @@
 @endsection
 
 @section('scripts')
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
 	<script src="/js/alerts.js"></script>
 	<script src="/js/groupEdit.js"></script>
 @endsection
