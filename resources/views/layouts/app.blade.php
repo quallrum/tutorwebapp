@@ -10,6 +10,7 @@
 	<meta name="theme-color" content="#000"/>
 	<meta name="apple-mobile-web-app-status-bar-style" content="#000"/>
 	<link rel="shortcut icon" href="" type="image/png"/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.0/css/bootstrap-grid.min.css"/>
     @yield('head')
 </head>
 <body>
