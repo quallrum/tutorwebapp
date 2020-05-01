@@ -38,7 +38,9 @@
 						@foreach ($header as $date)
 							<div class="journal__table-item journal__table-item--date" style="overflow: hidden;">
 								{{ $date }}
-								<img src="/img/bin.svg" alt="del" class="delete">
+								@if ($journal[$group->students->first()->id]->first()->editable())
+									<img src="/img/bin.svg" alt="del" class="delete">
+								@endif
 							</div>
 						@endforeach
 						<div class="journal__addColumn" id="addColumn"><img src="/img/plusSign.svg" alt="add"/></div>
