@@ -6,6 +6,7 @@ use App\Models\Group;
 use App\Models\Student;
 use App\Models\User;
 use App\Models\Journal;
+use App\Models\Subject;
 use App\Http\Requests\Group\UpdateRequest;
 use App\Http\Requests\Group\UpdateEmailRequest;
 use App\Http\Requests\Group\UpdatePasswordRequest;
@@ -51,13 +52,60 @@ class GroupController extends Controller{
 		$this->authorize('group.edit', $group);
 		
 		$monitors = User::withRole('user');
+		$subjects = Subject::whereNotIn('id', $group->subjects()->pluck('id'))->get();
+		$subjectTutor = $group->subjectTutorMap();
 
 		return view('group.form', [
 			'action'	=> route('group.update', ['group' => $group->id]),
 			'method'	=> 'put',
 			'group'		=> $group,
 			'monitors'	=> $monitors,
+			'subjects'	=> $subjects,
+			'subjectTutor'	=> $subjectTutor,
 		]);
+	}
+
+	public function subjectTutors(Request $request, Group $group){
+		$request->validate(['subject' => ['required', 'integer']]);
+		$subject = Subject::findOrFail($request->input('subject'));
+		$raw = [];
+		foreach ($subject->tutors as $tutor){
+			$raw[] = [
+				'id'			=> $tutor->user->id,
+				'firstname'		=> $tutor->firstname,
+				'lastname'		=> $tutor->lastname,
+				'fathername'	=> $tutor->fathername,
+				'email'			=> $tutor->user->email,
+			];
+		}
+		
+		return response()->json($raw);
+	}
+
+	public function addSubject(Request $request, Group $group){
+		$data = $request->validate([
+			'tutor' 	=> ['required', 'integer', 'exists:tutors,user_id'],
+			'subject'	=> ['required', 'integer', 'exists:subjects,id'],
+		]);
+
+		if($group->hasSubject($data['subject']))
+			$result = $group->updateSubject($data['subject'], $data['tutor']);
+		else
+			$result = $group->addSubject($data['subject'], $data['tutor']);
+
+		if($result)	return response()->json(['message' => 'Updated!'], 200);
+		else		return response()->json(['message' => 'Failed!'], 500);
+	}
+
+	public function deleteSubject(Request $request, Group $group){
+		$data = $request->validate([
+			'subject'	=> ['required', 'integer', 'exists:subjects,id'],
+		]);
+
+		if($group->deleteSubject($data['subject']))
+			return response()->json(['message' => 'Deleted!'], 200);
+		else
+			return response()->json(['message' => 'Failed!'], 500);
 	}
 
 	public function update(UpdateRequest $request, Group $group){

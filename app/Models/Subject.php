@@ -38,5 +38,5 @@ class Subject extends Model{
 	
 
 	public function groups(){ return $this->belongsToMany(Group::class); }
-	public function tutors(){ return $this->belongsToMany(User::class, 'tutor_subject', 'subject_id', 'tutor_id'); }
+	public function tutors(){ return $this->belongsToMany(Tutor::class, 'tutor_subject', 'subject_id', 'tutor_id'); }
 }

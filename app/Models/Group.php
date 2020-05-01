@@ -35,6 +35,42 @@ class Group extends Model{
 			->first();
 	}
 
+	public function hasSubject($subject){
+		$subject = $subject instanceof Subject ? $subject->id : $subject;
+		return (bool) DB::table('group_subject')
+			->where('group_id', $this->attributes['id'])
+			->where('subject_id', $subject)
+			->count();
+	}
+
+	public function addSubject($subject, $tutor){
+		$subject = $subject instanceof Subject ? $subject->id : $subject;
+		return (bool) DB::table('group_subject')->insert([
+			'group_id'		=> $this->attributes['id'],
+			'subject_id'	=> $subject,
+			'tutor_id'		=> $tutor,
+		]);
+	}
+
+	public function updateSubject($subject, $tutor){
+		$subject = $subject instanceof Subject ? $subject->id : $subject;
+		return (bool) DB::table('group_subject')
+			->where('group_id', $this->attributes['id'])
+			->where('subject_id', $subject)
+			->where('tutor_id', $tutor)
+			->update([
+				'tutor_id'	=> $tutor,
+			]);
+	}
+
+	public function deleteSubject($subject){
+		$subject = $subject instanceof Subject ? $subject->id : $subject;
+		return (bool) DB::table('group_subject')
+			->where('group_id', $this->attributes['id'])
+			->where('subject_id', $subject)
+			->delete();
+	}
+
 	// Special string compare method to support RU and UA special symbols
 	// Case insensitive
 	protected function strLocaleCompare($a, $b){
@@ -118,6 +154,13 @@ class Group extends Model{
 		// If code get here, strings are the same until the end of the shorter string
 		// So, longer string should follow the shorter
 		return $lenA > $lenB ? 1 : -1;
+	}
+
+	public function subjectTutorMap(){
+		return DB::table('group_subject')
+			->where('group_id', $this->id)
+			->pluck('tutor_id', 'subject_id')
+			->all();
 	}
 
 	public function getStudentsAttribute(){

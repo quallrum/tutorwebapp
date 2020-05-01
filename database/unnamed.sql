@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Апр 24 2020 г., 22:22
+-- Время создания: Май 02 2020 г., 00:33
 -- Версия сервера: 5.7.23
 -- Версия PHP: 7.2.10
 
@@ -50,8 +50,8 @@ CREATE TABLE `groups` (
   `monitor_id` bigint(20) UNSIGNED DEFAULT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `ms_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -60,7 +60,7 @@ CREATE TABLE `groups` (
 --
 
 INSERT INTO `groups` (`id`, `title`, `name`, `monitor_id`, `user_id`, `ms_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'ТМ-71', NULL, 2, 19, 14, '2020-03-13 22:00:00', '2020-04-23 20:27:21', NULL),
+(1, 'ТМ-71', NULL, 2, 19, 5, '2020-04-28 13:15:35', '2020-04-28 13:15:35', NULL),
 (2, 'ТМ-72', NULL, 3, 20, 25, '2020-03-13 22:00:00', '2020-03-13 22:00:00', NULL),
 (3, 'ТР-71', NULL, 4, 21, 44, '2020-03-13 22:00:00', '2020-03-13 22:00:00', NULL),
 (4, 'ТР-72', NULL, 5, 22, 65, '2020-03-13 22:00:00', '2020-03-13 22:00:00', NULL);
@@ -151,8 +151,8 @@ CREATE TABLE `journals` (
   `student_id` bigint(20) UNSIGNED NOT NULL,
   `subject_id` int(10) UNSIGNED NOT NULL,
   `value` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -3658,8 +3658,8 @@ CREATE TABLE `students` (
   `fathername` varchar(255) NOT NULL,
   `email` varchar(255) DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL,
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -3759,8 +3759,8 @@ CREATE TABLE `subjects` (
   `id` int(10) UNSIGNED NOT NULL,
   `title` varchar(255) NOT NULL,
   `type` varchar(255) NOT NULL,
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -3793,20 +3793,34 @@ INSERT INTO `subjects` (`id`, `title`, `type`, `created_at`, `updated_at`, `dele
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `tutors_tg`
+-- Структура таблицы `tutors`
 --
 
-CREATE TABLE `tutors_tg` (
+CREATE TABLE `tutors` (
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `username` varchar(255) NOT NULL
+  `lastname` varchar(255) NOT NULL DEFAULT '',
+  `firstname` varchar(255) NOT NULL DEFAULT '',
+  `fathername` varchar(255) NOT NULL DEFAULT '',
+  `telegram` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Дамп данных таблицы `tutors_tg`
+-- Дамп данных таблицы `tutors`
 --
 
-INSERT INTO `tutors_tg` (`user_id`, `username`) VALUES
-(6, 'quallrum');
+INSERT INTO `tutors` (`user_id`, `lastname`, `firstname`, `fathername`, `telegram`) VALUES
+(6, 'Федорова', 'Наталія', 'Володимирівна', 'Navy_TimoXa'),
+(7, 'Швайко', 'Валерій', 'Григорович', NULL),
+(8, 'Львова', 'Олена', 'Леонідівна', NULL),
+(9, 'Кондрашова', 'Аліна', 'Володимирівна', 'yelmanovv'),
+(10, 'Сегеда', 'Ірина', 'Василівна', NULL),
+(11, 'Гусєва', 'Ірина', 'Ігорівна', NULL),
+(12, 'Тихоход', 'Володимир', 'Олександрович', NULL),
+(13, 'Беспала', 'Ольга', 'Миколаївна', NULL),
+(14, 'Гаврилко', 'Євген', 'Володимирович', NULL),
+(15, 'Стативка', 'Юрій', 'Іванович', NULL),
+(16, 'Воронько', 'Максим', 'Платонович', NULL),
+(17, 'Шульженко', 'Олег', 'Феодосійович', NULL);
 
 -- --------------------------------------------------------
 
@@ -3874,7 +3888,7 @@ INSERT INTO `users` (`id`, `email`, `role_id`, `email_verified_at`, `password`, 
 (4, 'tr71@monitor.com', 4, '2020-03-13 22:00:00', '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-03-13 22:00:00'),
 (5, 'tr72@monitor.com', 4, '2020-03-13 22:00:00', '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-03-13 22:00:00'),
 (6, 'natasha_f@ukr.net', 3, '2020-03-14 13:48:25', '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-03-14 13:48:25'),
-(7, 'valshvaiko57@gmail.com', 3, NULL, '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-03-13 22:00:00'),
+(7, 'valshvaiko57@gmail.com', 3, '2020-03-14 13:48:25', '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-03-13 22:00:00'),
 (8, 'olen.lvova@gmail.com', 3, NULL, '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-03-13 22:00:00'),
 (9, 'chipalinka@ukr.net', 3, NULL, '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-03-13 22:00:00'),
 (10, 'irynaseg@gmail.com', 3, NULL, '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-03-13 22:00:00'),
@@ -3882,13 +3896,13 @@ INSERT INTO `users` (`id`, `email`, `role_id`, `email_verified_at`, `password`, 
 (12, 'v.tikhokhod@gmail.com', 3, NULL, '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-03-13 22:00:00'),
 (13, 'olya327@ukr.net', 3, NULL, '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-03-13 22:00:00'),
 (14, 'gev.1964@ukr.net', 3, NULL, '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-03-13 22:00:00'),
-(15, 'satyvka@gmail.com', 3, NULL, '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-03-13 22:00:00'),
+(15, 'statyvka@gmail.com', 3, NULL, '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-03-13 22:00:00'),
 (16, 'voronko@gmail.com', 3, NULL, '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-03-13 22:00:00'),
 (17, 'shulzhenko@gmail.com', 3, NULL, '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-03-13 22:00:00'),
 (18, 'email@com.ua', 2, NULL, '$2y$10$JNhx67VTH8PDf3TtnwkcL.60vMd9k9T6hTmxYg5c2SyPHzqsOhWLG', NULL, '2020-03-14 14:27:20', '2020-03-16 14:02:11'),
-(19, 'tm71@group.com', 5, '2020-04-22 21:00:00', '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-03-13 22:00:00'),
+(19, 'tm71@group.com', 5, '2020-04-22 21:00:00', '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-04-28 13:16:16'),
 (20, 'tm72@group.com', 5, NULL, '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-03-13 22:00:00'),
-(21, 'tr71@group.com', 5, NULL, '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-03-13 22:00:00'),
+(21, 'tr71@group.com', 5, NULL, '$2y$10$A3F8jokwqCMwTy9nUtGSiuFSifmnDZ7ZpoYvgbMSZ6TQXwnA1Gj8W', NULL, '2020-03-13 22:00:00', '2020-04-27 11:14:05'),
 (22, 'tr72@group.com', 5, NULL, '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-03-13 22:00:00');
 
 --
@@ -3952,11 +3966,10 @@ ALTER TABLE `subjects`
   ADD PRIMARY KEY (`id`);
 
 --
--- Индексы таблицы `tutors_tg`
+-- Индексы таблицы `tutors`
 --
-ALTER TABLE `tutors_tg`
-  ADD UNIQUE KEY `user` (`user_id`),
-  ADD UNIQUE KEY `username` (`username`);
+ALTER TABLE `tutors`
+  ADD PRIMARY KEY (`user_id`);
 
 --
 -- Индексы таблицы `tutor_subject`
@@ -3987,7 +4000,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT для таблицы `groups`
 --
 ALTER TABLE `groups`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT для таблицы `journals`
@@ -4059,10 +4072,10 @@ ALTER TABLE `students`
   ADD CONSTRAINT `fk_students_group_id` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON UPDATE CASCADE;
 
 --
--- Ограничения внешнего ключа таблицы `tutors_tg`
+-- Ограничения внешнего ключа таблицы `tutors`
 --
-ALTER TABLE `tutors_tg`
-  ADD CONSTRAINT `tutors_tg_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `tutors`
+  ADD CONSTRAINT `tutors_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Ограничения внешнего ключа таблицы `tutor_subject`
