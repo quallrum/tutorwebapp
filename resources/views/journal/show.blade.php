@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Журнал '.$group->title)
+
 @section('head')
 	<link rel="stylesheet" href="/css/main.min.css"/>
 @endsection

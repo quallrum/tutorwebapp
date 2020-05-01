@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Подтвердите email')
+
 @section('head')
     <link rel="stylesheet" href="/css/main.min.css"/>
 @endsection
@@ -11,7 +13,7 @@
 @section('content')
 	<section class="container-fluid emailVerification">
 		<div class="emailVerification__window">
-			<h2 class="emailVerification__heading">Подтверждение Email</h2>
+			<h2 class="emailVerification__heading">Подтвердите Email</h2>
 			<div class="emailVerification__textBlock">
 				<div class="emailVerification__alertInText">
 					<p class="emailVerification__alertInText-text emailVerification__alertInText-text--bold">Ваш Email не подтвержен!</p>

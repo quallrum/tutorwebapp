@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Выберите предмет')
+
 @section('head')
 	<link rel="stylesheet" href="/css/main.min.css"/>
 @endsection
@@ -29,7 +31,7 @@
 			@else
 				<p class="chooseSubject__null">У этой группы пока нет предметов</p>
 			@endif
-			<a class="chooseGroup__back" href="{{ route('journal.group') }}">Назад</a>
+			<a class="chooseGroup__back" href="@can('journal.changeGroup') {{route('journal.group') }} @else {{ route('home') }} @endcan">Назад</a>
 		</div>
 	</section>
 @endsection
