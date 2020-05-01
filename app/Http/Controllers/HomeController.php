@@ -8,6 +8,7 @@ use App\Http\Requests\User\EditPasswordRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Tutor;
 use App\Models\Group;
 
 class HomeController extends Controller{
@@ -20,11 +21,31 @@ class HomeController extends Controller{
         else if($role->name == 'group') $group = Group::where('user_id', $user->id)->first();
         else                            $group = null;
 
+        if($role->name == 'tutor')  $tutor = Tutor::find($user->id);
+        else                        $tutor = null;
+
         return view('home')->with([
             'user'  => $user,
             'role'  => $role,
             'group' => $group,
+            'tutor' => $tutor,
         ]);
+    }
+
+    public function editFullname(Request $request){
+		$user = Auth::user();
+		if($user->role->name != 'tutor') return response('', 403);
+
+        $data = $request->validate([
+            'firstname'		=> ['required', 'min:3', 'max:50'],
+            'lastname'		=> ['required', 'min:3', 'max:50'],
+            'fathername'	=> ['required', 'min:3', 'max:50'],
+		]);
+		
+		$tutor = Tutor::findOrFail($user->id);
+		
+		if($tutor->update($data))	return response()->json(['message' => 'Updated!'], 200);
+		else						return response()->json(['message' => 'Failed!'], 500);
     }
 
     public function editEmail(EditEmailRequest $request){
