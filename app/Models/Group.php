@@ -127,7 +127,7 @@ class Group extends Model{
 			return $this->strLocaleCompare($a->fullname, $b->fullname);
 		});
 
-		return $students;
+		return collect($students);
 	}
 
 	public function monitor(){ return $this->belongsTo(User::class); }
