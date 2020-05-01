@@ -23,6 +23,7 @@ Route::group([
 	'middleware'    => ['auth', 'verified']
 ], function(){
 	Route::get('/', 'HomeController@index')->name('home');
+	Route::post('/editFullname', 'HomeController@editFullname')->name('edit.fullname');
 	Route::post('/editEmail', 'HomeController@editEmail')->name('edit.email');
 	Route::post('/editPassword', 'HomeController@editPassword')->name('edit.password');
 	Route::name('journal.')->prefix('/journal')->group(function(){

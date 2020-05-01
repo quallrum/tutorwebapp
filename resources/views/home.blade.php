@@ -23,7 +23,16 @@
                 <div class="home__password">
                     <p class="home__password-text">●●●●●●●●●●</p><img class="home__password-img" src="/img/profileEdit.svg" alt="Редактировать" id="editPasswordButton"/>
                 </div>
-            @endif
+			@endif
+			@if ($role->name == 'tutor')
+				<form class="home__fullname" action="{{ route('edit.fullname') }}" method="post" name="homeFullname">
+					@csrf
+					<input class="home__fullname-item" type="text" name="lastname" value="{{ $tutor->lastname }}" id="lastname"/>
+					<input class="home__fullname-item" type="text" name="firstname" value="{{ $tutor->firstname }}" id="firstname"/>
+					<input class="home__fullname-item" type="text" name="fathername" value="{{ $tutor->fathername }}" id="fathername"/>
+					<button class="home__fullname-submit" type="submit">Сохранить</button>
+				</form>
+			@endif
 			<div class="home__links">
                 @if ($role->name == 'group' || $role->name == 'monitor')
                     <a class="home__link" href="{{ route('journal.subject', ['group' => $group->id]) }}">Журнал</a>
