@@ -20,6 +20,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         'journal'   => 'App\Policies\JournalPolicy',
         'group'     => 'App\Policies\GroupPolicy',
+        'roles'     => 'App\Policies\RolesPolicy',
     ];
 
     public function registerPolicies(){

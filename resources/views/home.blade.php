@@ -45,6 +45,7 @@
                 @endcan
 				@if($role->name == 'admin')
 					<a class="home__link" href="{{ route('group.index') }}">Управление группами</a>
+					<a class="home__link" href="{{ route('roles.index') }}">Роли пользователей</a>
 				@endif
                 {{-- <a class="home__link" href="">Выбрать предмет</a> --}}
             </div>
