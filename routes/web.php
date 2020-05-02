@@ -45,8 +45,9 @@ Route::group([
 		Route::post('/role', 'RolesController@role')->name('role');
 	});
 	Route::resource('subject', 'SubjectController')->except(['show']);
-	// Route::prefix('/subjects')->name('subjects.')->group(function(){
-		// Route::get('/', 'SubjectController@index')->name('index');
-	// });
+	Route::prefix('/subject/{subject}')->name('subject.')->group(function(){
+		Route::post('/addTutor', 'SubjectController@addTutor')->name('addTutor');
+		Route::post('/removeTutor', 'SubjectController@removeTutor')->name('removeTutor');
+	});
 });
 
