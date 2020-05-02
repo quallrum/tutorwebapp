@@ -21,6 +21,7 @@ class AuthServiceProvider extends ServiceProvider
         'journal'   => 'App\Policies\JournalPolicy',
         'group'     => 'App\Policies\GroupPolicy',
         'roles'     => 'App\Policies\RolesPolicy',
+        'subject'   => 'App\Policies\SubjectPolicy',
     ];
 
     public function registerPolicies(){
