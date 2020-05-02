@@ -40,7 +40,7 @@
 						@foreach ($header as $date)
 							<div class="journal__table-item journal__table-item--date" style="overflow: hidden;">
 								{{ $date }}
-								@if ($journal[$group->students->first()->id]->first()->editable())
+								@if ($journal[$group->students->first()->id]->first()->editable() or $user->role->name == 'admin')
 									<img src="/img/bin.svg" alt="del" class="delete">
 								@endif
 							</div>
@@ -58,7 +58,7 @@
 						@if($user->can('journal.edit'))
 							@foreach ($journal[$student->id] as $record)
 								<div class="journal__table-item">
-									@if ($record->editable())
+									@if ($record->editable() or $user->role->name == 'admin')
 										<input class="absent" type="text" name="journal[{{ $record->id }}]" value="{{ $record->value }}"/>
 									@else
 										{{ $record->value }}
