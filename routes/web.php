@@ -40,6 +40,9 @@ Route::group([
 		Route::post('/email', 'GroupController@updateEmail')->name('email');
 		Route::post('/password', 'GroupController@updatePassword')->name('password');
 	});
-	
+	Route::prefix('/roles')->name('roles.')->group(function(){
+		Route::get('/', 'RolesController@index')->name('index');
+		Route::post('/role', 'RolesController@role')->name('role');
+	});
 });
 
