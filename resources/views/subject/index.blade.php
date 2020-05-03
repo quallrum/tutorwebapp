@@ -15,13 +15,7 @@
 				@foreach ($subjects as $subject)
 					<div class="adminSubjects__item">
 						<p class="adminSubjects__name">{{ $subject->title }}</p>
-						<div class="
-							@switch($subject->type)
-								@case('Лек') lecture @break 
-								@case('Лаб') laboratory @break 
-								@case('Прак') practic @break 
-							@endswitch
-						"></div>
+						<div class="{{ $subject->type->name }}"></div>
 						<a class="adminSubjects__edit" href="{{ route('subject.edit', ['subject' => $subject->id]) }}"><img src="/img/profileEdit.svg" alt="edit"/></a>
 					</div>
 				@endforeach

@@ -4,27 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Subject;
+use App\Models\SubjectType;
 
 class SubjectController extends Controller{
-
-	private $types = [];
-
-	public function __construct(){
-		$this->types = [
-			(object) [
-				'name'	=> 'Лек',
-				'title'	=> 'Лекция',
-			],
-			(object) [
-				'name'	=> 'Лаб',
-				'title'	=> 'Лабораторная',
-			],
-			(object) [
-				'name'	=> 'Прак',
-				'title'	=> 'Практика',
-			],
-		];
-	}
 
 	public function index(){
 		$this->authorize('subject.list');
@@ -51,7 +33,7 @@ class SubjectController extends Controller{
 			'action'	=> route('subject.update', ['subject' => $subject->id]),
 			'method'	=> 'put',
 			'subject'	=> $subject,
-			'types'		=> $this->types,
+			'types'		=> SubjectType::all(),
 			'tutors'	=> $subject->tutors,
 			'allTutors'	=> $subject->otherTutors(),
 		]);

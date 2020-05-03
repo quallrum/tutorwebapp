@@ -17,13 +17,7 @@
 			@if ($subjects and $subjects->count())
 				<div class="chooseSubject__items">
 					@foreach ($subjects as $subject)
-						<a class="chooseSubject__item 
-						@switch($subject->type)
-							@case('Лек') lecture @break 
-							@case('Лаб') laboratory @break 
-							@case('Прак') practic @break 
-						@endswitch
-						" href="{{ route('journal.show', ['group' => $group->id, 'subject' => $subject->id]) }}">
+						<a class="chooseSubject__item {{ $subject->type->name }}" href="{{ route('journal.show', ['group' => $group->id, 'subject' => $subject->id]) }}">
 							{{ $subject->title }}
 						</a>
 					@endforeach

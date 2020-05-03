@@ -20,13 +20,7 @@
 		</div>
 		<div class="journal__subject">
 			<h2 class="journal__subject-heading">{{ $subject->title }}</h2>
-			<div class="
-				@switch($subject->type)
-					@case('Лек') lecture @break 
-					@case('Лаб') laboratory @break 
-					@case('Прак') practic @break 
-				@endswitch
-			"></div>
+			<div class="{{ $subject->type->name }}"></div>
 			{{-- <a class="journal__subject-button">Изменить предмет</a> --}}
 		</div>
 		@can('journal.edit')

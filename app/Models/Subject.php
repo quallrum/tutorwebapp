@@ -45,6 +45,7 @@ class Subject extends Model{
 		return Tutor::whereNotIn('user_id', $this->tutors()->pluck('user_id'))->get();
 	}
 
+	public function type(){ return $this->belongsTo(SubjectType::class, 'type_id'); }
 	public function groups(){ return $this->belongsToMany(Group::class); }
 	public function tutors(){ return $this->belongsToMany(Tutor::class, 'tutor_subject', 'subject_id', 'tutor_id'); }
 }

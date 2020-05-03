@@ -20,10 +20,10 @@
 				<input class="adminEditSubject__group" type="text" name="adminEditSubjectGroup" value="{{ $subject->title }}" autofocus="autofocus"/>
 				<select class="adminEditSubject__type" name="type" id="adminEditSubjectType">
 					@foreach ($types as $type)
-						@if ($subject->type == $type->name)
-							<option value="{{ $type->name }}" selected="selected">{{ $type->title }}</option>
+						@if ($subject->type->id == $type->id)
+							<option value="{{ $type->id }}" selected="selected">{{ $type->title }}</option>
 						@else
-							<option value="{{ $type->name }}">{{ $type->title }}</option>
+							<option value="{{ $type->id }}">{{ $type->title }}</option>
 						@endif
 					@endforeach
 				</select>
