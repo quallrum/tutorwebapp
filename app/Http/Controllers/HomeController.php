@@ -36,6 +36,21 @@ class HomeController extends Controller{
 		return $view;
     }
 
+    public function editEmail(EditEmailRequest $request){
+        $user = Auth::user();
+        
+        if($user->update($request->only('email')))  return response()->json(['success' => 'Updated!'], 200);
+        else                                        return response()->json(['error' => 'Failed!'], 500);
+    }
+
+    public function editPassword(EditPasswordRequest $request){
+        $user = Auth::user();
+        $user->password = Hash::make($request->input('password'));
+        
+        if($user->save())   return response()->json(['success' => 'Updated!'], 200);
+        else                return response()->json(['error' => 'Failed!'], 500);
+    }
+
     public function editFullname(Request $request){
 		$user = Auth::user();
 		if($user->role->name != 'tutor') return response('', 403);
@@ -52,18 +67,17 @@ class HomeController extends Controller{
 		else						return response()->json(['message' => 'Failed!'], 500);
     }
 
-    public function editEmail(EditEmailRequest $request){
-        $user = Auth::user();
+    public function editTelegram(Request $request){
+		$user = Auth::user();
+		if($user->role->name != 'tutor') return response('', 403);
         
-        if($user->update($request->only('email')))  return response()->json(['success' => 'Updated!'], 200);
-        else                                        return response()->json(['error' => 'Failed!'], 500);
-    }
-
-    public function editPassword(EditPasswordRequest $request){
-        $user = Auth::user();
-        $user->password = Hash::make($request->input('password'));
-        
-        if($user->save())   return response()->json(['success' => 'Updated!'], 200);
-        else                return response()->json(['error' => 'Failed!'], 500);
+        $data = $request->validate([
+            'telegram'		=> ['required', 'string', 'min:1', 'max:200'],
+		]);
+		
+		$tutor = Tutor::findOrFail($user->id);
+		
+		if($tutor->update($data))	return response()->json(['message' => 'Updated!'], 200);
+		else						return response()->json(['message' => 'Failed!'], 500);        
     }
 }

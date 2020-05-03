@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tutor extends Model{
 	
-	protected $fillable = ['firstname', 'lastname', 'fathername'];
+	protected $fillable = ['firstname', 'lastname', 'fathername', 'telegram'];
 	public $timestamps = false;
 	protected $primaryKey = 'user_id';
 
