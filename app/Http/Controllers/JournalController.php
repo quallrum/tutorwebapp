@@ -71,7 +71,7 @@ class JournalController extends Controller{
 		if($request->journal){
 			foreach ($request->journal as $id => $value) {
 				$record = Journal::find($id);
-				if($record and $record->editable() and $record->subject_id == $subject->id){
+				if($record and ($record->editable() or Auth::user()->role->name == 'admin') and $record->subject_id == $subject->id){
 					if(!$record->update(['value' => ($value == 'н' ? 0 : 1)])){
 						$failed[] = $id;
 						Log::error('User '.Auth::user()->id.' failed to update record '.$id.' due to unexpected error');
@@ -79,7 +79,7 @@ class JournalController extends Controller{
 				}
 				else{
 					$failed[] = $id;
-					Log::warning('User '.Auth::user()->id.' failed to update record '.$id.':  record not editable, record doesn\'t belong to subject '.$subject->id.' or record not found');
+					Log::warning('User '.Auth::user()->id.' failed to update record '.$id.': record not editable, record doesn\'t belong to subject '.$subject->id.' or record not found');
 				}
 			}
 		}
@@ -117,11 +117,11 @@ class JournalController extends Controller{
 
 		if($request->wantsJson()){
 			if($errors) return response()->json([
-				'errors'	=> $errors,
-			]);
+				'message'	=> $errors,
+			], 500);
 
 			return response()->json([
-				'success'	=> 'Journal updated!'
+				'message'	=> 'Journal updated!'
 			]);
 		}
 
