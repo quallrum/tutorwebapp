@@ -362,6 +362,7 @@ function sendAjaxTutorSelect(e) {
     let formData = new FormData();
     formData.append('tutor', tutorId);
     formData.append('subject', subjectId);
+    formData.append('_token', document.getElementById('subjectsPerGroupToken').value);
 
     let action = subjectsPerGroupForm.getAttribute('action');
 
@@ -421,6 +422,8 @@ function handleDeleteSubjectButton(e) {
 
     let formData = new FormData();
     formData.append('subject', itemData.subjectId);
+    formData.append('_token', document.getElementById('subjectsPerGroupToken').value);
+
     let action = subjectsPerGroupForm.getAttribute('data-actionToDelete');
 
     let xhr = new XMLHttpRequest();
@@ -497,6 +500,7 @@ function handleAddSubjectButton(e) {
 
     let formData = new FormData();
     formData.append('subject', itemData.subjectId);
+    formData.append('_token', document.getElementById('allSubjectsToken').value);
     let action = allSubjectsForm.getAttribute('action');
 
     let xhr = new XMLHttpRequest();
@@ -556,6 +560,7 @@ function addSubject(dataObj) {
     option.value = 0;
     option.innerText = "";
     option.setAttribute('selected', 'true');
+    option.setAttribute('disabled', 'true');
     select.append(option);
 
     for (let i in arrayOfTutors) {
@@ -577,3 +582,61 @@ function addSubject(dataObj) {
     setHandlerForAllDeleteSubjectButtons();
     setHandlerForTutorSelects();
 }
+
+
+// ACCOUNTS
+
+document.forms['accounts'].addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    let error = false;
+
+    let arrayOfSelect = document.querySelectorAll('.accounts__select');
+    arrayOfSelect.forEach((elem) => {
+        if (elem.value == 0) {
+            error = true;
+        }
+    });
+
+    if (error) {
+        putTextInAlertAndShowIt('Заполните данные');
+    } else {
+        let formData = new FormData(this);
+        let action = this.getAttribute('action');
+        let xhr = new XMLHttpRequest();
+
+        try {
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status == 200) {
+                        putTextInSuccessAlertAndShowIt('Данные успешно обновлены');
+                    } else {
+                        try {
+                            let arrayJSON = JSON.parse(xhr.responseText);
+                            let errors = arrayJSON.errors;
+
+                            let strWithError = '';
+                            for (let error in errors) {
+                                strWithError += error + '\n';
+                            }
+                            putTextInAlertAndShowIt(strWithError);
+
+                        } catch (e) {
+                            putTextInAlertAndShowIt('Упс, что-то пошло не так(');
+                        }
+                    }
+                }
+            }
+
+            xhr.open('POST', action);
+            xhr.setRequestHeader('Accept', 'application/json');
+            xhr.send(formData);
+
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+
+});
+

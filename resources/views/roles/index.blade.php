@@ -16,7 +16,7 @@
 	<section class="container-fluid adminRoles">
 		<h1 class="adminRoles__heading">Роли пользователей</h1>
 		<form action="{{ route('roles.role') }}" method="post" name="adminRolesForm">
-			@csrf
+			<input type="hidden" name="_token" id="token" value="{{ csrf_token() }}"/>
 			<div class="adminRoles__table">
 				@if ($users)
 					@foreach ($users as $user)
