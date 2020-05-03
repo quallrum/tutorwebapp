@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Май 02 2020 г., 15:30
+-- Время создания: Май 03 2020 г., 23:22
 -- Версия сервера: 5.7.23
 -- Версия PHP: 7.2.10
 
@@ -48,10 +48,10 @@ CREATE TABLE `groups` (
   `title` varchar(255) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `monitor_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
   `ms_id` bigint(20) UNSIGNED DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -60,7 +60,7 @@ CREATE TABLE `groups` (
 --
 
 INSERT INTO `groups` (`id`, `title`, `name`, `monitor_id`, `user_id`, `ms_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'ТМ-71', NULL, 2, 19, 5, '2020-04-28 13:15:35', '2020-04-28 13:15:35', NULL),
+(1, 'ТМ-71', NULL, 2, 19, 5, '2020-05-03 19:50:09', '2020-05-03 19:50:09', NULL),
 (2, 'ТМ-72', NULL, 3, 20, 25, '2020-03-13 22:00:00', '2020-03-13 22:00:00', NULL),
 (3, 'ТР-71', NULL, 4, 21, 44, '2020-03-13 22:00:00', '2020-03-13 22:00:00', NULL),
 (4, 'ТР-72', NULL, 5, 22, 65, '2020-03-13 22:00:00', '2020-03-13 22:00:00', NULL);
@@ -1170,7 +1170,7 @@ INSERT INTO `journals` (`id`, `student_id`, `subject_id`, `value`, `created_at`,
 (1006, 22, 14, '0', '2020-01-08 08:00:00', '2020-01-08 08:00:00', NULL),
 (1007, 23, 14, '1', '2020-01-08 08:00:00', '2020-01-08 08:00:00', NULL),
 (1008, 24, 14, '1', '2020-01-08 08:00:00', '2020-01-08 08:00:00', NULL),
-(1009, 25, 1, '0', '2020-01-30 11:00:00', '2020-01-30 11:00:00', NULL),
+(1009, 25, 1, '1', '2020-05-03 20:17:10', '2020-05-03 20:17:10', NULL),
 (1010, 26, 1, '1', '2020-01-30 11:00:00', '2020-01-30 11:00:00', NULL),
 (1011, 27, 1, '1', '2020-01-30 11:00:00', '2020-01-30 11:00:00', NULL),
 (1012, 28, 1, '0', '2020-01-30 11:00:00', '2020-01-30 11:00:00', NULL),
@@ -3860,6 +3860,7 @@ CREATE TABLE `tutor_subject` (
 INSERT INTO `tutor_subject` (`tutor_id`, `subject_id`, `order`) VALUES
 (6, 1, 1),
 (6, 2, 1),
+(7, 1, 1),
 (7, 3, 1),
 (7, 4, 1),
 (8, 5, 1),
@@ -3906,8 +3907,8 @@ INSERT INTO `users` (`id`, `email`, `role_id`, `email_verified_at`, `password`, 
 (3, 'tm72@monitor.com', 4, '2020-03-13 22:00:00', '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-03-13 22:00:00'),
 (4, 'tr71@monitor.com', 4, '2020-03-13 22:00:00', '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-03-13 22:00:00'),
 (5, 'tr72@monitor.com', 4, '2020-03-13 22:00:00', '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-03-13 22:00:00'),
-(6, 'natasha_f@ukr.net', 3, '2020-03-14 13:48:25', '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-03-14 13:48:25'),
-(7, 'valshvaiko57@gmail.com', 3, '2020-03-14 13:48:25', '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-03-13 22:00:00'),
+(6, 'natasha_f@ukr.net', 3, '2020-03-14 13:48:25', '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-05-03 19:50:22'),
+(7, 'valshvaiko57@gmail.com', 3, '2020-03-14 13:48:25', '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-05-03 19:50:42'),
 (8, 'olen.lvova@gmail.com', 3, NULL, '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-03-13 22:00:00'),
 (9, 'chipalinka@ukr.net', 3, NULL, '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-03-13 22:00:00'),
 (10, 'irynaseg@gmail.com', 3, NULL, '$2y$10$yab5VfElBJ2Scsb/UFFYJOEEo5b/xjHcQbO5omY/gllLeqYoMOLI2', NULL, '2020-03-13 22:00:00', '2020-03-13 22:00:00'),

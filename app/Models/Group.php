@@ -20,6 +20,20 @@ class Group extends Model{
 			->get('groups.*');
 	}
 
+	public static function freeMonitors(){
+		return User::leftJoin('groups', 'users.id', '=', 'groups.monitor_id')
+			->where('users.role_id', Role::monitor)
+			->where('groups.monitor_id', null)
+			->get('users.*');
+	}
+
+	public static function freeGroups(){
+		return User::leftJoin('groups', 'users.id', '=', 'groups.user_id')
+			->where('users.role_id', Role::group)
+			->where('groups.user_id', null)
+			->get('users.*');
+	}
+
 	public function getStudent($student){
 		$student = $student instanceof Student ? $student->id : $student;
 		$student = Student::where('id', $student)->where('group_id', $this->id)->first();

@@ -51,7 +51,8 @@ class GroupController extends Controller{
 	public function edit(Group $group){
 		$this->authorize('group.edit', $group);
 		
-		$monitors = User::withRole('user');
+		$monitors = Group::freeMonitors();
+		$groups = Group::freeGroups();
 		$subjects = Subject::whereNotIn('id', $group->subjects()->pluck('id'))->get();
 		$subjectTutor = $group->subjectTutorMap();
 
@@ -60,6 +61,7 @@ class GroupController extends Controller{
 			'method'	=> 'put',
 			'group'		=> $group,
 			'monitors'	=> $monitors,
+			'groups'	=> $groups,
 			'subjects'	=> $subjects,
 			'subjectTutor'	=> $subjectTutor,
 		]);
@@ -220,6 +222,36 @@ class GroupController extends Controller{
 		
 		if($user->save())   return response()->json(['success' => 'Updated!'], 200);
 		else                return response()->json(['error' => 'Failed!'], 500);
+	}
+
+	public function updateAccounts(Request $request, Group $group){
+		$this->authorize('group.edit', $group);
+
+		$request->validate([
+			'monitor'	=> ['integer', 'exists:users,id'],
+			'user'		=> ['integer', 'exists:users,id'],
+		]);
+
+		$return = true;
+
+		if($request->has('monitor')){
+			$user = User::find($request->input('monitor'));
+			if($group->monitor->id != $user->id){
+				$group->monitor()->associate($user);
+				if(!$group->save()) $return = false;
+			}
+		}
+
+		if($request->has('user')){
+			$user = User::find($request->input('user'));
+			if($group->user->id != $user->id){
+				$group->user()->associate($user);
+				if(!$group->save()) $return = false;
+			}
+		}
+
+		if($return)	return response()->json(['message' => 'Updated!'], 200);
+		else		return response()->json(['message' => 'Failed!'], 500);
 	}
 
 	/**
