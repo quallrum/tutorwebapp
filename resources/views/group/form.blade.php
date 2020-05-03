@@ -107,7 +107,7 @@
 		<section class="groupSubjects" id="groupSubjects">
 			<!-- data-actionToDelete-->
 			<form class="groupSubjects__subjects" action="{{ route('group.addSubject', ['group' => $group->id]) }}" method="post" name="subjectsPerGroupForm" data-actionToDelete="{{ route('group.deleteSubject', ['group' => $group->id]) }}">
-				@csrf
+				<input type="hidden" name="_token" id="subjectsPerGroupToken" value="{{ csrf_token() }}"/>
 				<div class="groupSubjects__table" id="subjectPerGroupTable">
 					<div class="groupSubjects__table-item groupSubjects__table-item--heading">Предметы группы</div>
 					@if ($group->subjects)
@@ -139,7 +139,7 @@
 				</div>
 			</form>
 			<form class="groupSubjects__allSubjects" action="{{ route('group.subjectTutors', ['group' => $group->id]) }}" method="post" name="allSubjectsForm">
-				@csrf
+				<input type="hidden" name="_token" id="allSubjectsToken" value="{{ csrf_token() }}"/>
 				<div class="groupSubjects__table" id="allSubjectsTable">
 					<div class="groupSubjects__table-item groupSubjects__table-item--heading">Все предметы</div>
 					@if ($subjects->count())

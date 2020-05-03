@@ -14,7 +14,7 @@
 @section('content')
 	<section class="container-fluid adminEditSubject">
 		<form class="adminEditSubject__form" action="{{ $action }}" name="adminEditSubject">
-			@csrf
+			<input type="hidden" name="_token" id="editSubjectToken" value="{{ csrf_token() }}"/>
 			@method($method)
 			<div class="adminEditSubject__heading">
 				<input class="adminEditSubject__group" type="text" name="adminEditSubjectGroup" value="{{ $subject->title }}" autofocus="autofocus"/>
@@ -42,6 +42,7 @@
 			</div>
 		</form>
 		<form class="adminEditSubject__tutorsForm" action="{{ route('subject.addTutor', ["subject" => $subject->id]) }}" method="post" name="adminAllTutors">
+			<input type="hidden" name="_token" id="allTutorsToken" value="{{ csrf_token() }}"/>
 			<div class="adminEditSubject__table adminEditSubject__table--all">
 				<div class="adminEditSubject__table-item adminEditSubject__table-item--heading">Все преподаватели</div>
 				@if ($allTutors)
