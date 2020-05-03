@@ -39,6 +39,7 @@ Route::group([
 		Route::post('/deleteSubject', 'GroupController@deleteSubject')->name('deleteSubject');
 		Route::post('/email', 'GroupController@updateEmail')->name('email');
 		Route::post('/password', 'GroupController@updatePassword')->name('password');
+		Route::post('/accounts', 'GroupController@updateAccounts')->name('accounts');
 	});
 	Route::prefix('/roles')->name('roles.')->group(function(){
 		Route::get('/', 'RolesController@index')->name('index');

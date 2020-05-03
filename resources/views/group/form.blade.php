@@ -15,8 +15,11 @@
 @section('content')
 	<section class="container-fluid">
 		<ul class="nav nav-tabs">
-			<li class="nav-item"><a class="nav-link active" href="#groupEdit" data-toggle="tab" role="tab">Редактирование группы</a></li>
-			<li class="nav-item"><a class="nav-link" href="#groupSubjects" data-toggle="tab" role="tab">Редактирование предметов группы</a></li>
+			<li class="nav-item"><a class="nav-link active" href="#groupEdit">Редактирование группы</a></li>
+			@if ($group->exists)
+				<li class="nav-item"><a class="nav-link" href="#groupSubjects">Редактирование предметов группы</a></li>
+				<li class="nav-item"><a class="nav-link" href="#accounts">Аккаунты</a></li>
+			@endif
 		</ul>
 	</section>
 	<section class="container-fluid groupEdit" id="groupEdit">
@@ -158,6 +161,38 @@
 						@endforeach					
 					@endif
 				</div>
+			</form>
+		</section>
+		<section class="container accounts" id="accounts">
+			<form action="{{ route('group.accounts', ['group' => $group->id]) }}" method="post" name="accounts">
+				<input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+				<h2 class="accounts__heading">Аккаунт старосты</h2>
+				<select class="accounts__select" name="monitor">
+					@if ($group->monitor)
+						<option value="{{ $group->monitor->id }}" selected="selected" disabled="disabled">{{ $group->monitor->email }}</option>
+					@else
+						<option value="0" selected="selected" disabled="disabled"></option>
+					@endif
+					@if ($monitors)
+						@foreach ($monitors as $user)
+							<option value="{{ $user->id }}">{{ $user->email }}</option>
+						@endforeach
+					@endif
+				</select>
+				<h2 class="accounts__heading">Аккаунт группы</h2>
+				<select class="accounts__select" name="user">
+					@if ($group->user)
+						<option value="{{ $group->user->id }}" selected="selected" disabled="disabled">{{ $group->user->email }}</option>
+					@else
+						<option value="0" selected="selected" disabled="disabled"></option>
+					@endif
+					@if ($groups)
+						@foreach ($groups as $user)
+							<option value="{{ $user->id }}">{{ $user->email }}</option>
+						@endforeach
+					@endif
+				</select>
+				<button class="accounts__submit" type="submit">Сохранить</button>
 			</form>
 		</section>
 	@endif
