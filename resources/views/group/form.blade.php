@@ -116,13 +116,7 @@
 					@if ($group->subjects)
 						@foreach ($group->subjects as $subject)
 							<div class="groupSubjects__table-item" data-id="{{ $subject->id }}">
-								<div class="
-									@switch($subject->type)
-										@case('Лек') lecture @break 
-										@case('Лаб') laboratory @break 
-										@case('Прак') practic @break 
-									@endswitch
-								"></div>
+								<div class="{{ $subject->type->name }}"></div>
 								<p class="name">{{ $subject->title }}</p>
 								@if ($subject->tutors)
 									<select class="select" name="subject">
@@ -148,13 +142,7 @@
 					@if ($subjects->count())
 						@foreach ($subjects as $subject)
 							<div class="groupSubjects__table-item" data-id="{{ $subject->id }}">
-								<div class="
-									@switch($subject->type)
-										@case('Лек') lecture @break 
-										@case('Лаб') laboratory @break 
-										@case('Прак') practic @break 
-									@endswitch
-								"></div>
+								<div class="{{ $subject->type->name }}"></div>
 								<p class="name name--allSubjects">{{ $subject->title }}</p>
 								<img class="groupSubjects__table-item-add" src="/img/plusSign.svg" alt="add"/>
 							</div>
