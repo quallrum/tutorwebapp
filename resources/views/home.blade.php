@@ -18,13 +18,19 @@
             <p class="home__role">Вы вошли как {{ mb_strtolower($role->title) }}</p>
             @if ($role->name != 'group')
                 <div class="home__email">
-                    <p class="home__email-text" id="emailText">{{ $user->email }}</p><img class="home__email-img" src="/img/profileEdit.svg" alt="Редактировать" id="editEmailButton"/>
+					<p class="home__email-text" id="emailText">{{ $user->email }}</p>
+					<img class="home__email-img" src="/img/profileEdit.svg" alt="Редактировать" id="editEmailButton"/>
                 </div>
                 <div class="home__password">
-                    <p class="home__password-text">●●●●●●●●●●</p><img class="home__password-img" src="/img/profileEdit.svg" alt="Редактировать" id="editPasswordButton"/>
+					<p class="home__password-text">●●●●●●●●●●</p>
+					<img class="home__password-img" src="/img/profileEdit.svg" alt="Редактировать" id="editPasswordButton"/>
                 </div>
 			@endif
 			@if ($role->name == 'tutor')
+				<div class="home__telegram">
+					<p class="home__telegram-text" id="telegramText">{{ $tutor->telegram ? '@'.$tutor->telegram : 'Telegram'}}</p>
+					<img class="home__telegram-img" src="/img/profileEdit.svg" alt="Редактировать" id="editTelegramButton"/>
+				</div>
 				<form class="home__fullname" action="{{ route('edit.fullname') }}" method="post" name="homeFullname">
 					@csrf
 					<input class="home__fullname-item" type="text" name="lastname" value="{{ $tutor->lastname }}" id="lastname"/>
@@ -41,7 +47,7 @@
 					<a class="home__link" href="{{ route('group.edit', ['group' => $group->id]) }}">Управление группой</a>
 				@endif
                 @can('journal.changeGroup')
-                    <a class="home__link" href="{{ route('journal.group') }}">Выбрать группу</a>
+                    <a class="home__link" href="{{ route('journal.group') }}">Журнал</a>
                 @endcan
 				@if($role->name == 'admin')
 					<a class="home__link" href="{{ route('group.index') }}">Управление группами</a>
@@ -52,38 +58,56 @@
             </div>
 		</div>
 	</section>
-	<section class="editEmail" id="editEmailSection">
-		<div class="editEmail__window">
-			<h2 class="editEmail__heading">Редактировать Email</h2>
-            <form class="editEmail__form" action="{{ route('edit.email') }}" method="post" name="editEmail">
-                @csrf
-				<label>
-					<p class="editEmail__label">Email</p>
-					<input class="editEmail__input" type="email" name="email" id="editEmailInput" value="{{ $user->email }}"/>
-				</label>
-				<button class="editEmail__submit" type="submit">Готово</button>
-			</form>
-			<div class="editEmail__cross" id="editEmailCross">&#9587</div>
-		</div>
-	</section>
-	<section class="editPassword" id="editPasswordSection">
-		<div class="editPassword__window">
-			<h2 class="editPassword__heading">Редактировать пароль</h2>
-            <form class="editPassword__form" action="{{ route('edit.password') }}" method="post" name="editPassword">
-                @csrf
-				<label class="editPassword__item">
-					<p class="editPassword__text">Новый пароль</p>
-					<input class="editPassword__input" type="password" name="password" id="passwordInput" autocomplete="new-password"/>
-					<p class="editPassword__capture" id="passwordLength">Пароль должен содержать не менее 8 символов.</p>
-				</label>
-				<label class="editPassword__item">
-					<p class="editPassword__text">Повторите новый пароль</p>
-					<input class="editPassword__input" type="password" name="password_confirmation" id="passwordRepeatInput" autocomplete="new-password"/>
-					<p class="editPassword__capture" id="passwordsAreNotTheSame">Пароли не совпадают.</p>
-				</label>
-				<button class="editPassword__submit" type="submit">Готово</button>
-			</form>
-			<div class="editPassword__cross" id="editPasswordCross">&#9587</div>
-		</div>
-	</section>
+	@if ($role->name != 'group')
+		<section class="editEmail" id="editEmailSection">
+			<div class="editEmail__window">
+				<h2 class="editEmail__heading">Редактировать Email</h2>
+				<form class="editEmail__form" action="{{ route('edit.email') }}" method="post" name="editEmail">
+					@csrf
+					<label>
+						<p class="editEmail__label">Email</p>
+						<input class="editEmail__input" type="email" name="email" id="editEmailInput" value="{{ $user->email }}"/>
+					</label>
+					<button class="editEmail__submit" type="submit">Готово</button>
+				</form>
+				<div class="editEmail__cross" id="editEmailCross">&#9587</div>
+			</div>
+		</section>
+		<section class="editPassword" id="editPasswordSection">
+			<div class="editPassword__window">
+				<h2 class="editPassword__heading">Редактировать пароль</h2>
+				<form class="editPassword__form" action="{{ route('edit.password') }}" method="post" name="editPassword">
+					@csrf
+					<label class="editPassword__item">
+						<p class="editPassword__text">Новый пароль</p>
+						<input class="editPassword__input" type="password" name="password" id="passwordInput" autocomplete="new-password"/>
+						<p class="editPassword__capture" id="passwordLength">Пароль должен содержать не менее 8 символов.</p>
+					</label>
+					<label class="editPassword__item">
+						<p class="editPassword__text">Повторите новый пароль</p>
+						<input class="editPassword__input" type="password" name="password_confirmation" id="passwordRepeatInput" autocomplete="new-password"/>
+						<p class="editPassword__capture" id="passwordsAreNotTheSame">Пароли не совпадают.</p>
+					</label>
+					<button class="editPassword__submit" type="submit">Готово</button>
+				</form>
+				<div class="editPassword__cross" id="editPasswordCross">&#9587</div>
+			</div>
+		</section>
+	@endif
+	@if ($role->name == 'tutor')
+		<section class="editTelegram" id="editTelegramSection">
+			<div class="editTelegram__window">
+				<h2 class="editTelegram__heading">Редактировать Telegram</h2>
+				<form class="editTelegram__form" action="{{ route('edit.telegram') }}" method="post" name="editTelegram">
+					@csrf
+					<label>
+						<p class="editTelegram__label">Telegram</p>
+						<input class="editTelegram__input" type="text" name="telegram" id="editTelegramInput" value="{{ $tutor->telegram }}" placeholder="telegram_login"/>
+					</label>
+					<button class="editTelegram__submit" type="submit">Готово</button>
+				</form>
+				<div class="editTelegram__cross" id="editTelegramCross">&#9587</div>
+			</div>
+		</section>
+	@endif
 @endsection
