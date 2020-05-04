@@ -10,6 +10,9 @@ use App\Models\Subject;
 use App\Models\Journal\Journal;
 use App\Models\Journal\JournalColumn;
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 class JournalController extends Controller{
 	
 	public function group(){
@@ -65,6 +68,60 @@ class JournalController extends Controller{
 			'header'	=> $header,
 			'table'		=> $table,
 		]);
+	}
+
+	public function file(Group $group, Subject $subject){
+
+		$journal = Journal::table($group, $subject);
+
+		$header = ['№', 'ПІБ'];
+		if($i = \array_key_first($journal)){
+			foreach ($journal[$i] as $record) {
+				$header[] = $record->date;
+			}
+		}
+
+		$spreadsheet = new Spreadsheet();
+		$sheet = $spreadsheet->getActiveSheet();
+		$sheet->setTitle('Журнал '.$group->title);
+
+		$style = [
+			'alignment'	=> [
+				'horizontal'	=> \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+				'vertical'		=> \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+			],
+		];
+
+		$sheet->getColumnDimension('A')->setAutoSize(true);
+		$sheet->getColumnDimension('B')->setAutoSize(true);
+		$sheet->getRowDimension('1')->setRowHeight(30);
+		$sheet->getStyle('1:1')->applyFromArray($style);
+
+		$sheet->fromArray($header);
+		for($i = 4; $i < count($header) + 1; $i++){
+			$sheet->getCellByColumnAndRow($i, 1)->setDataType(\PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+		}
+
+		$i = 2;
+		foreach ($group->students as $student) {
+			$sheet->setCellValue('A'.$i, $i - 1);
+			$sheet->setCellValue('B'.$i, $student->lastname.' '.$student->firstname);
+
+			$j = 3;
+			foreach ($journal[$student->id] as $record) {
+				$cell = $sheet->getCellByColumnAndRow($j, $i);
+				$cell->setValue($record->value);
+				$cell->getStyle()->applyFromArray($style);
+				$j++;
+			}
+			$i++;
+		}
+		
+		$writer = new Xlsx($spreadsheet);
+
+		return response()->streamDownload(function() use ($writer){
+			$writer->save('php://output');
+		}, $group->title.'.xlsx');
 	}
 
 	public function update(Group $group, Subject $subject, Request $request){
