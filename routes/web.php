@@ -32,6 +32,7 @@ Route::group([
 		Route::get('/{group}', 'JournalController@subject')->name('subject');
 		Route::get('/{group}/{subject}', 'JournalController@show')->name('show');
 		Route::post('/{group}/{subject}', 'JournalController@update');
+		Route::get('/{group}/{subject}/file', 'JournalController@file')->name('file');
 	});
 	Route::name('mark.')->prefix('/mark')->group(function(){
 		Route::get('/', 'MarkController@group')->name('group');
