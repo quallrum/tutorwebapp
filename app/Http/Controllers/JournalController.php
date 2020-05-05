@@ -124,6 +124,7 @@ class JournalController extends Controller{
 				'vertical'		=> \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
 			],
 			'borders'	=> $borders,
+			'alignment'	=> ['wrapText' => true],
 		];
 
 		$style_number = [
@@ -134,8 +135,8 @@ class JournalController extends Controller{
 			'borders'	=> $borders,
 		];
 
-		$sheet->getColumnDimension('A')->setAutoSize(true);
-		$sheet->getColumnDimension('B')->setAutoSize(true);
+		$sheet->getColumnDimension('A')->setWidth(3);
+		$sheet->getColumnDimension('B')->setWidth(27);
 		$sheet->getRowDimension('1')->setRowHeight(30);
 		
 		$sheet->getCell('A1')->getStyle()->applyFromArray($style_common);
