@@ -84,6 +84,12 @@ class JournalController extends Controller{
 		$spreadsheet = new Spreadsheet();
 		$sheet = $spreadsheet->getActiveSheet();
 		$sheet->setTitle('Журнал '.$group->title);
+		$sheet->getPageSetup()
+			->setPaperSize(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_A4)
+			->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+		$sheet->getPageMargins()
+			->setTop(0.4)->setBottom(0.4)
+			->setLeft(0.4)->setRight(0.4);
 
 		$borders = [
 			'top'		=> [
