@@ -81,6 +81,16 @@ class JournalController extends Controller{
 			}
 		}
 
+		$N = count($header);
+		if ($N < 29) {
+			$n = 29 - $N;
+			array_push($header, ...array_fill(0, $n, ''));
+			foreach ($group->students as $student) {
+				$journal[$student->id] = $journal[$student->id]->all();
+				array_push($journal[$student->id], ...array_fill(0, $n, new Journal));
+			}
+		}
+
 		$spreadsheet = new Spreadsheet();
 		$sheet = $spreadsheet->getActiveSheet();
 		$sheet->setTitle('Журнал '.$group->title);
