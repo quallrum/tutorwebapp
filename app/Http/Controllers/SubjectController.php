@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\Subject\SubjectRequest;
 use App\Models\Subject;
 use App\Models\SubjectType;
 
@@ -19,11 +20,27 @@ class SubjectController extends Controller{
 	}
 
 	public function create(){
-		//
+		$this->authorize('subject.create');
+
+		return view('subject.form')->with([
+			'action'	=> route('subject.store'),
+			'method'	=> 'post',
+			'subject'	=> new Subject,
+			'types'		=> SubjectType::all(),
+			'tutors'	=> [],
+			'allTutors'	=> [],
+		]);
 	}
 
-	public function store(Request $request){
-		//
+	public function store(SubjectRequest $request){
+		$this->authorize('subject.create');
+
+		$subject = (new Subject);
+		$subject->title = $request->input('title');
+		$subject->type_id = $request->input('type');
+
+		if($subject->save())	return redirect()->route('subject.edit', ['subject' => $subject->id])->with('success', 'Created successful!');
+		else 					return back()->withErrors('Creating failed!');
 	}
 
 	public function edit(Subject $subject){
@@ -39,8 +56,14 @@ class SubjectController extends Controller{
 		]);
 	}
 	
-	public function update(Request $request, $id){
-		//
+	public function update(SubjectRequest $request, Subject $subject){
+		$this->authorize('subject.edit');
+
+		$subject->fill($request->only('title'));
+		$subject->type()->associate($request->input('type'));
+
+		if($subject->save())	return response()->json(['message' => 'Updated!'], 200);
+		else					return response()->json(['message' => 'Failed!'], 500);
 	}
 
 	public function attachTutor(Request $request, Subject $subject){

@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Subject extends Model{
 
+	protected $fillable = ['title', 'type'];
+
 	protected function joined($query, $table){
 		if($joins = $query->getQuery()->joins){
 			foreach ($joins as $join) {
