@@ -85,11 +85,31 @@ class JournalController extends Controller{
 		$sheet = $spreadsheet->getActiveSheet();
 		$sheet->setTitle('Журнал '.$group->title);
 
+		$borders = [
+			'top'		=> [
+				'borderStyle' 	=> \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+				'color'			=> ['rgb' => '000000'],
+			],
+			'bottom'	=> [
+				'borderStyle' 	=> \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+				'color'			=> ['rgb' => '000000'],
+			],
+			'left'		=> [
+				'borderStyle' 	=> \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+				'color'			=> ['rgb' => '000000'],
+			],
+			'right'		=> [
+				'borderStyle' 	=> \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+				'color'			=> ['rgb' => '000000'],
+			],
+		];
+
 		$style_common = [
 			'alignment'	=> [
 				'horizontal'	=> \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
 				'vertical'		=> \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
 			],
+			'borders'	=> $borders,
 		];
 
 		$style_fullname = [
@@ -97,6 +117,7 @@ class JournalController extends Controller{
 				'horizontal'	=> \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
 				'vertical'		=> \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
 			],
+			'borders'	=> $borders,
 		];
 
 		$style_number = [
@@ -104,18 +125,22 @@ class JournalController extends Controller{
 				'horizontal'	=> \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT,
 				'vertical'		=> \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
 			],
+			'borders'	=> $borders,
 		];
 
 		$sheet->getColumnDimension('A')->setAutoSize(true);
 		$sheet->getColumnDimension('B')->setAutoSize(true);
 		$sheet->getRowDimension('1')->setRowHeight(30);
-		$sheet->getStyle('1:1')->applyFromArray($style_common);
+		
+		$sheet->getCell('A1')->getStyle()->applyFromArray($style_common);
+		$sheet->getCell('B1')->getStyle()->applyFromArray($style_common);
 
 		$sheet->fromArray($header);
 		for($i = 3; $i <= count($header); $i++){
 			$sheet->getCellByColumnAndRow($i, 1)
 				->setDataType(\PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING)
-				->getStyle()->getAlignment()->setTextRotation(90);
+				->getStyle()->applyFromArray($style_common)
+				->getAlignment()->setTextRotation(90);
 
 			$column = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($i);
 			$sheet->getColumnDimension($column)->setWidth(4);
