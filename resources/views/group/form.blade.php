@@ -109,7 +109,7 @@
 	@if ($group->exists)
 		<section class="groupSubjects" id="groupSubjects">
 			<!-- data-actionToDelete-->
-			<form class="groupSubjects__subjects" action="{{ route('group.addSubject', ['group' => $group->id]) }}" method="post" name="subjectsPerGroupForm" data-actionToDelete="{{ route('group.deleteSubject', ['group' => $group->id]) }}">
+			<form class="groupSubjects__subjects" action="{{ route('group.subject', ['group' => $group->id]) }}" method="post" name="subjectsPerGroupForm"  data-actionToDelete="{{ route('group.subject', ['group' => $group->id]) }}">
 				<input type="hidden" name="_token" id="subjectsPerGroupToken" value="{{ csrf_token() }}"/>
 				<div class="groupSubjects__table" id="subjectPerGroupTable">
 					<div class="groupSubjects__table-item groupSubjects__table-item--heading">Предметы группы</div>
@@ -135,7 +135,7 @@
 					@endif
 				</div>
 			</form>
-			<form class="groupSubjects__allSubjects" action="{{ route('group.subjectTutors', ['group' => $group->id]) }}" method="post" name="allSubjectsForm">
+			<form class="groupSubjects__allSubjects" action="{{ route('group.tutors', ['group' => $group->id]) }}" method="post" name="allSubjectsForm">
 				<input type="hidden" name="_token" id="allSubjectsToken" value="{{ csrf_token() }}"/>
 				<div class="groupSubjects__table" id="allSubjectsTable">
 					<div class="groupSubjects__table-item groupSubjects__table-item--heading">Все предметы</div>

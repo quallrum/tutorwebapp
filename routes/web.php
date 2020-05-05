@@ -35,9 +35,9 @@ Route::group([
 	});
 	Route::resource('group', 'GroupController')->except(['show']);
 	Route::prefix('/group/{group}')->name('group.')->group(function(){
-		Route::post('/subjectTutors', 'GroupController@subjectTutors')->name('subjectTutors');
-		Route::post('/addSubject', 'GroupController@addSubject')->name('addSubject');
-		Route::post('/deleteSubject', 'GroupController@deleteSubject')->name('deleteSubject');
+		Route::post('/tutors', 'GroupController@subjectTutors')->name('tutors');
+		Route::put('/subject', 'GroupController@attachSubject')->name('subject');
+		Route::delete('/subject', 'GroupController@detachSubject');
 		Route::post('/email', 'GroupController@updateEmail')->name('email');
 		Route::post('/password', 'GroupController@updatePassword')->name('password');
 		Route::post('/accounts', 'GroupController@updateAccounts')->name('accounts');
