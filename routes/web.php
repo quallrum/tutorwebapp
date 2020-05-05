@@ -48,8 +48,8 @@ Route::group([
 	});
 	Route::resource('subject', 'SubjectController')->except(['show']);
 	Route::prefix('/subject/{subject}')->name('subject.')->group(function(){
-		Route::post('/addTutor', 'SubjectController@addTutor')->name('addTutor');
-		Route::post('/removeTutor', 'SubjectController@removeTutor')->name('removeTutor');
+		Route::put('/tutor', 'SubjectController@attachTutor')->name('tutor');
+		Route::delete('/tutor', 'SubjectController@detachTutor');
 	});
 });
 
