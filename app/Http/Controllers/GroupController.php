@@ -84,7 +84,7 @@ class GroupController extends Controller{
 		return response()->json($raw);
 	}
 
-	public function addSubject(Request $request, Group $group){
+	public function attachSubject(Request $request, Group $group){
 		$data = $request->validate([
 			'tutor' 	=> ['required', 'integer', 'exists:tutors,user_id'],
 			'subject'	=> ['required', 'integer', 'exists:subjects,id'],
@@ -99,7 +99,7 @@ class GroupController extends Controller{
 		else		return response()->json(['message' => 'Failed!'], 500);
 	}
 
-	public function deleteSubject(Request $request, Group $group){
+	public function detachSubject(Request $request, Group $group){
 		$data = $request->validate([
 			'subject'	=> ['required', 'integer', 'exists:subjects,id'],
 		]);

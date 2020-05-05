@@ -363,6 +363,7 @@ function sendAjaxTutorSelect(e) {
     formData.append('tutor', tutorId);
     formData.append('subject', subjectId);
     formData.append('_token', document.getElementById('subjectsPerGroupToken').value);
+    formData.append('_method', 'PUT');
 
     let action = subjectsPerGroupForm.getAttribute('action');
 
@@ -423,6 +424,7 @@ function handleDeleteSubjectButton(e) {
     let formData = new FormData();
     formData.append('subject', itemData.subjectId);
     formData.append('_token', document.getElementById('subjectsPerGroupToken').value);
+    formData.append('_method', 'DELETE');
 
     let action = subjectsPerGroupForm.getAttribute('data-actionToDelete');
 
@@ -436,8 +438,6 @@ function handleDeleteSubjectButton(e) {
                     subjectItem.remove();
                     putTextInSuccessAlertAndShowIt('Данные успешно обновлены');
                 } else {
-                    deleteSubject(itemData);
-                    subjectItem.remove();
                     try {
                         let arrayJSON = JSON.parse(xhr.responseText);
                         let errors = arrayJSON.errors;
@@ -575,8 +575,6 @@ function addSubject(dataObj) {
     item.innerHTML += `
     <img src="/img/bin.svg" alt="add" class="groupSubjects__table-item-delete">
     `;
-
-
 
     document.querySelector('#subjectPerGroupTable').append(item);
     setHandlerForAllDeleteSubjectButtons();
