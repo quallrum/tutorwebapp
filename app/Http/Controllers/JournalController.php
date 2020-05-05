@@ -85,9 +85,23 @@ class JournalController extends Controller{
 		$sheet = $spreadsheet->getActiveSheet();
 		$sheet->setTitle('Журнал '.$group->title);
 
-		$style = [
+		$style_common = [
 			'alignment'	=> [
 				'horizontal'	=> \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+				'vertical'		=> \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+			],
+		];
+
+		$style_fullname = [
+			'alignment'	=> [
+				'horizontal'	=> \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+				'vertical'		=> \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+			],
+		];
+
+		$style_number = [
+			'alignment'	=> [
+				'horizontal'	=> \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT,
 				'vertical'		=> \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
 			],
 		];
@@ -95,23 +109,32 @@ class JournalController extends Controller{
 		$sheet->getColumnDimension('A')->setAutoSize(true);
 		$sheet->getColumnDimension('B')->setAutoSize(true);
 		$sheet->getRowDimension('1')->setRowHeight(30);
-		$sheet->getStyle('1:1')->applyFromArray($style);
+		$sheet->getStyle('1:1')->applyFromArray($style_common);
 
 		$sheet->fromArray($header);
-		for($i = 4; $i < count($header) + 1; $i++){
-			$sheet->getCellByColumnAndRow($i, 1)->setDataType(\PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+		for($i = 3; $i <= count($header); $i++){
+			$sheet->getCellByColumnAndRow($i, 1)
+				->setDataType(\PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING)
+				->getStyle()->getAlignment()->setTextRotation(90);
+
+			$column = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($i);
+			$sheet->getColumnDimension($column)->setWidth(4);
 		}
 
 		$i = 2;
 		foreach ($group->students as $student) {
-			$sheet->setCellValue('A'.$i, $i - 1);
-			$sheet->setCellValue('B'.$i, $student->lastname.' '.$student->firstname);
+			$sheet->getRowDimension($i)->setRowHeight(16);
+			
+			$sheet->getCell('A'.$i)->setValue($i - 1)
+				->getStyle()->applyFromArray($style_number);
+
+			$sheet->getCell('B'.$i)->setValue($student->lastname.' '.$student->firstname)
+				->getStyle()->applyFromArray($style_fullname);
 
 			$j = 3;
 			foreach ($journal[$student->id] as $record) {
-				$cell = $sheet->getCellByColumnAndRow($j, $i);
-				$cell->setValue($record->value);
-				$cell->getStyle()->applyFromArray($style);
+				$sheet->getCellByColumnAndRow($j, $i)->setValue($record->value)
+					->getStyle()->applyFromArray($style_common);
 				$j++;
 			}
 			$i++;
