@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $subject->exists ? 'Редактирование предмета'.$subject->title : 'Создание предмета')
+@section('title', $subject->exists ? 'Редактирование предмета '.$subject->title : 'Создание предмета')
 
 @section('head')
 	<link rel="stylesheet" href="/css/main.min.css"/>
@@ -13,8 +13,8 @@
 
 @section('content')
 	<section class="container-fluid adminEditSubject">
-		<form class="adminEditSubject__form" action="{{ $action }}" name="adminEditSubject">
-			<input type="hidden" name="_token" id="editSubjectToken" value="{{ csrf_token() }}"/>
+		<form action="{{ $action }}" name="adminEditSubjectNameType">
+			<input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 			@method($method)
 			<div class="adminEditSubject__heading">
 				<input class="adminEditSubject__group" type="text" name="adminEditSubjectGroup" value="{{ $subject->title }}" autofocus="autofocus"/>
@@ -27,7 +27,12 @@
 						@endif
 					@endforeach
 				</select>
+				<button class="adminEditSubject__submit" type="submit">Сохранить</button>
 			</div>
+		</form>
+		<form class="adminEditSubject__form" action="{{ route('subject.tutor', ["subject" => $subject->id]) }}" name="adminEditSubject">
+			<input type="hidden" name="_token" value="{{ csrf_token() }}" id="adminEditSubjectToken"/>
+			@csrf
 			<div class="adminEditSubject__table adminEditSubject__table--forSubject">
 				<div class="adminEditSubject__table-item adminEditSubject__table-item--heading">Преподаватели этого предмета</div>
 				@if ($subject->tutors)
@@ -40,20 +45,19 @@
 					@endforeach
 				@endif
 			</div>
-		</form>
-		<form class="adminEditSubject__tutorsForm" action="{{ route('subject.addTutor', ["subject" => $subject->id]) }}" method="post" name="adminAllTutors">
-			<input type="hidden" name="_token" id="allTutorsToken" value="{{ csrf_token() }}"/>
-			<div class="adminEditSubject__table adminEditSubject__table--all">
-				<div class="adminEditSubject__table-item adminEditSubject__table-item--heading">Все преподаватели</div>
-				@if ($allTutors)
-					@foreach ($allTutors as $tutor)
-						<div class="adminEditSubject__table-item" data-id="{{ $tutor->user->id }}"> 
-							<p class="name">{{ $tutor->fullname }}</p>
-							<p class="email">{{ $tutor->user->email }}</p>
-							<img class="adminEditSubject__addTutor" src="/img/plusSign.svg" alt="add"/>
-						</div>
-					@endforeach
-				@endif
+			<div class="adminEditSubject__tutorsForm">
+				<div class="adminEditSubject__table adminEditSubject__table--all">
+					<div class="adminEditSubject__table-item adminEditSubject__table-item--heading">Все преподаватели</div>
+					@if ($allTutors)
+						@foreach ($allTutors as $tutor)
+							<div class="adminEditSubject__table-item" data-id="{{ $tutor->user->id }}"> 
+								<p class="name">{{ $tutor->fullname }}</p>
+								<p class="email">{{ $tutor->user->email }}</p>
+								<img class="adminEditSubject__addTutor" src="/img/plusSign.svg" alt="add"/>
+							</div>
+						@endforeach
+					@endif
+				</div>
 			</div>
 		</form>
 	</section>

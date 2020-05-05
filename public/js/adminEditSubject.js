@@ -1,7 +1,6 @@
 'use strict';
 
 document.forms['adminEditSubject'].addEventListener('submit', (e) => { e.preventDefault(); });
-document.forms['adminAllTutors'].addEventListener('submit', (e) => { e.preventDefault(); });
 
 // delete tutor
 function setHandlerForDeleteButtons() {
@@ -27,7 +26,8 @@ function deleteTutor(e) {
 
     let formData = new FormData();
     formData.append('tutor', tutorId);
-    formData.append('_token', document.getElementById('editSubjectToken').value);
+    formData.append('_token', document.getElementById('adminEditSubjectToken').value);
+    formData.append('_method', 'DELETE');
     let action = document.forms['adminEditSubject'].getAttribute('action');
     let xhr = new XMLHttpRequest();
 
@@ -103,8 +103,9 @@ function addTutor(e) {
 
     let formData = new FormData();
     formData.append('tutor', tutorId);
-    formData.append('_token', document.getElementById('allTutorsToken').value);
-    let action = document.forms['adminAllTutors'].getAttribute('action');
+    formData.append('_token', document.getElementById('adminEditSubjectToken').value);
+    formData.append('_method', 'PUT');
+    let action = document.forms['adminEditSubject'].getAttribute('action');
     let xhr = new XMLHttpRequest();
 
     try {
@@ -158,3 +159,44 @@ function moveTutotToSubjectTable(tutorData) {
     setHandlerForDeleteButtons();
 }
 
+
+// name type form 
+
+document.forms['adminEditSubjectNameType'].addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    let formData = new FormData(this);
+    let action = this.getAttribute('action');
+    let xhr = new XMLHttpRequest();
+
+    try {
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status == 200) {
+                    putTextInSuccessAlertAndShowIt('Данные успешно обновлены');
+                } else {
+                    try {
+                        let arrayJSON = JSON.parse(xhr.responseText);
+                        let errors = arrayJSON.errors;
+
+                        let strWithError = '';
+                        for (let error in errors) {
+                            strWithError += error + '\n';
+                        }
+                        putTextInAlertAndShowIt(strWithError);
+                    } catch (e) {
+                        putTextInAlertAndShowIt('Упс, что-то пошло не так(');
+
+                    }
+                }
+            }
+        }
+
+        xhr.open("POST", action);
+        xhr.setRequestHeader('Accept', 'application/json');
+        xhr.send(formData);
+
+    } catch (e) {
+        console.log(e);
+    }
+});

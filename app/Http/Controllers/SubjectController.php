@@ -43,7 +43,7 @@ class SubjectController extends Controller{
 		//
 	}
 
-	public function addTutor(Request $request, Subject $subject){
+	public function attachTutor(Request $request, Subject $subject){
 		$this->authorize('subject.edit');
 		$data = $request->validate([
 			'tutor'	=> ['required', 'integer', 'exists:tutors,user_id'],
@@ -51,7 +51,19 @@ class SubjectController extends Controller{
 		
 		$subject->tutors()->attach($data['tutor']);
 		
-		if($subject->hasTutor($data['tutor']))	return response()->json(['message' => 'Added!'], 200);
+		if($subject->hasTutor($data['tutor']))	return response()->json(['message' => 'Attached!'], 200);
+		else									return response()->json(['message' => 'Failed!'], 500);
+	}
+
+	public function detachTutor(Request $request, Subject $subject){
+		$this->authorize('subject.edit');
+		$data = $request->validate([
+			'tutor'	=> ['required', 'integer', 'exists:tutors,user_id'],
+		]);
+		
+		$subject->tutors()->detach($data['tutor']);
+		
+		if(!$subject->hasTutor($data['tutor']))	return response()->json(['message' => 'Detached!'], 200);
 		else									return response()->json(['message' => 'Failed!'], 500);
 	}
 
