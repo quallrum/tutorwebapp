@@ -29,36 +29,38 @@
 			<div class="groupEdit__heading">
 				<input class="groupEdit__group" type="text" name="title" value="{{ $group->title ?? '' }}" autofocus="autofocus"/>
 			</div>
-			<label class="groupEdit__monitor-label" for="groupEditMonitor">Выберите старосту</label>
-			<select class="groupEdit__monitor" name="monitor" id="groupEditMonitor">
-				@foreach ($group->students as $student)
-					@if ($student->id == $group->ms_id)
-						<option selected value="{{ $student->id }}">{{ $student->fullname }}</option>
-					@else
-						<option value="{{ $student->id }}">{{ $student->fullname }}</option>
-					@endif
-				@endforeach
-			</select>
-			@if ($group->students)
-				<div class="groupEdit__table">
-					<div class="groupEdit__table-item groupEdit__table-item--heading">ФИО</div>
+			@if ($group->exists)
+				<label class="groupEdit__monitor-label" for="groupEditMonitor">Выберите старосту</label>
+				<select class="groupEdit__monitor" name="monitor" id="groupEditMonitor">
 					@foreach ($group->students as $student)
-						<div class="groupEdit__table-item" data-id="{{ $student->id }}"> 
-							<input class="name" type="text" name="students[{{ $student->id }}][lastname]" placeholder="Фамилия" value="{{ $student->lastname }}"/>
-							<input class="name" type="text" name="students[{{ $student->id }}][firstname]" placeholder="Имя" value="{{ $student->firstname }}"/>
-							<input class="name" type="text" name="students[{{ $student->id }}][fathername]" placeholder="Отчество" value="{{ $student->fathername }}"/>
-							<img class="groupEdit__table-item-delete" src="/img/bin.svg" alt="delete"/>
-						</div>
+						@if ($student->id == $group->ms_id)
+							<option selected value="{{ $student->id }}">{{ $student->fullname }}</option>
+						@else
+							<option value="{{ $student->id }}">{{ $student->fullname }}</option>
+						@endif
 					@endforeach
-				</div>
+				</select>
+				@if ($group->students)
+					<div class="groupEdit__table">
+						<div class="groupEdit__table-item groupEdit__table-item--heading">ФИО</div>
+						@foreach ($group->students as $student)
+							<div class="groupEdit__table-item" data-id="{{ $student->id }}"> 
+								<input class="name" type="text" name="students[{{ $student->id }}][lastname]" placeholder="Фамилия" value="{{ $student->lastname }}"/>
+								<input class="name" type="text" name="students[{{ $student->id }}][firstname]" placeholder="Имя" value="{{ $student->firstname }}"/>
+								<input class="name" type="text" name="students[{{ $student->id }}][fathername]" placeholder="Отчество" value="{{ $student->fathername }}"/>
+								<img class="groupEdit__table-item-delete" src="/img/bin.svg" alt="delete"/>
+							</div>
+						@endforeach
+					</div>
+				@endif
+				<div class="groupEdit__addStudent" id="addStudentButton"><img src="/img/plusSign.svg" alt="add"/></div>
 			@endif
-			<div class="groupEdit__addStudent" id="addStudentButton"><img src="/img/plusSign.svg" alt="add"/></div>
 			<div class="groupEdit__buttons">
 				<button class="groupEdit__submit" type="submit">Сохранить</button>
 				<div class="groupEdit__reload" id="reloadButton">отменить</div>
 			</div>
 		</form>
-		@if ($group->exists)
+		@if ($group->exists and $group->user)
 			<div class="container-fluid groupData">
 				<h2 class="groupData__heading">Данные аккаунта группы</h2>
 				<div class="groupData__email">
