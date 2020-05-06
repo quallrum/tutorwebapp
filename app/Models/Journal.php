@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-// use Group;
-// use Subject;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Journal extends Model{
+
+	use SoftDeletes;
 
 	protected $fillable = ['student_id', 'subject_id', 'value'];
 
@@ -32,9 +33,15 @@ class Journal extends Model{
 	public function getDateAttribute(){
 		return (new \DateTime($this->attributes['created_at']))->format('d.m');
 	}
+
 	public function getValueAttribute(){
-		if($this->attributes['value'])	return '';
-		else							return 'н';
+		if($this->attributes['value'] === null) return 'н';
+		else return $this->attributes['value'] == 0 ? '' : $this->attributes['value'];
+	}
+	
+	public function setValueAttribute($value){
+		if($value == 'н') return $this->attributes['value'] = null;
+		else return $value == '' ? $this->attributes['value'] = 0 : $this->attributes['value'] = $value;
 	}
 
 	public static function table(Group $group, Subject $subject){

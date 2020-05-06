@@ -32,17 +32,17 @@
 					<div class="journal__table-item">ФИО</div>					
 					@if($user->can('journal.edit'))
 						@foreach ($header as $date)
-							<div class="journal__table-item journal__table-item--date" style="overflow: hidden;">
+							<div class="journal__table-item journal__table-item--date">
 								{{ $date }}
 								@if ($journal[$group->students->first()->id]->first()->editable() or $user->role->name == 'admin')
-									<img src="/img/bin.svg" alt="del" class="delete">
+									<div class="delete"><img src="/img/bin.svg" alt="del"/></div>
 								@endif
 							</div>
 						@endforeach
 						<div class="journal__addColumn" id="addColumn"><img src="/img/plusSign.svg" alt="add"/></div>
 					@else
 						@foreach ($header as $date)
-							<div class="journal__table-item journal__table-item--date" style="overflow: hidden;">{{ $date }}</div>
+							<div class="journal__table-item journal__table-item--date">{{ $date }}</div>
 						@endforeach
 					@endif
 				</div>
@@ -51,7 +51,7 @@
 						<div class="journal__table-item" data-id="{{ $student->id }}">{{ $student->lastname }} {{ $student->firstname }}</div>
 						@if($user->can('journal.edit'))
 							@foreach ($journal[$student->id] as $record)
-								<div class="journal__table-item">
+								<div class="journal__table-item" data-itemId="{{ $record->id }}">
 									@if ($record->editable() or $user->role->name == 'admin')
 										<input class="absent" type="text" name="journal[{{ $record->id }}]" value="{{ $record->value }}"/>
 									@else
