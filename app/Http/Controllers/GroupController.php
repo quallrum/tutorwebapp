@@ -44,8 +44,11 @@ class GroupController extends Controller{
 
 		$group = Group::create($request->only(['title']));
 
-		if($group->exists)	return redirect()->route('group.edit', ['group' => $group->id])->with('success', 'Created successful');
-		else return back()->withErrors('Creating failed');
+		if($group->exists)	return response()->json([
+			'message' 	=> 'Created!',
+			'redirect'	=> route('group.edit', ['group' => $group->id]),
+		], 200);
+		else 				return response()->json(['message' => 'Failed!'], 500);
 	}
 
 	public function edit(Group $group){

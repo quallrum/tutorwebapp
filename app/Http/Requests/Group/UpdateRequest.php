@@ -14,8 +14,8 @@ class UpdateRequest extends FormRequest{
 	public function rules(){
 		return [
 			'title'		=> ['required', 'string', 'min:4', 'max:10'],
-			'monitor'	=> ['required', 'exists:students,id'],
-			'students'	=> ['required', 'array'],
+			'monitor'	=> ['nullable', 'exists:students,id'],
+			'students'	=> ['nullable', 'array'],
 			'delete'	=> ['nullable', 'array'],
 			'new'		=> ['nullable', 'array'],
 		];
