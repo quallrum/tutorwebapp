@@ -64,15 +64,24 @@ class JournalController extends Controller{
 	public function update(Group $group, Subject $subject, Request $request){
 		$this->authorize('journal.edit');
 
+		$request->validate([
+			'journal'		=> ['nullable', 'array'],
+			'new_header'	=> ['nullable', 'array'],
+			'new_journal'	=> ['nullable', 'array'],
+			'delete'		=> ['nullable', 'array'],
+		]);
+
 		$failed = [];
 		$failed_new = [];
+		$failed_delete = [];
 		$errors = [];
 
-		if($request->journal){
-			foreach ($request->journal as $id => $value) {
+		if($request->input('journal')){
+			foreach ($request->input('journal') as $id => $value) {
 				$record = Journal::find($id);
 				if($record and ($record->editable() or Auth::user()->role->name == 'admin') and $record->subject_id == $subject->id){
-					if(!$record->update(['value' => ($value == 'н' ? 0 : 1)])){
+					$record->value = $value;
+					if(!$record->save()){
 						$failed[] = $id;
 						Log::error('User '.Auth::user()->id.' failed to update record '.$id.' due to unexpected error');
 					}
@@ -84,27 +93,29 @@ class JournalController extends Controller{
 			}
 		}
 		
-		if($request->new){
+		if($request->input('new_journal')){
 			$today = (new \Datetime)->format('Y-m-d');
 			$last = Journal::lastDate($group->students()->first(), $subject);
 
-			if($today != $last){
-				foreach ($request->new as $id => $value) {
-					if($group->hasStudent($id)){
-						$record = new Journal;
-						$record->fill([
-							'student_id'	=> $id,
-							'subject_id'	=> $subject->id,
-							'value'			=> ($value == 'н' ? 0 : 1),
-						]);
-						if(!$record->save()){
-							$failed_new[] = $id;
-							Log::error('User '.Auth::user()->id.' failed to create record for student '.$id.' due to unexpected error');
+			if($today != $last or Auth::user()->role->name == 'admin'){
+				foreach ($request->input('new_journal') as $column) {
+					foreach ($column as $id => $value) {
+						if($group->hasStudent($id)){
+							$record = new Journal;
+							$record->fill([
+								'student_id'	=> $id,
+								'subject_id'	=> $subject->id,
+							]);
+							$record->value = $value;
+							if(!$record->save()){
+								$failed_new[] = $id;
+								Log::error('User '.Auth::user()->id.' failed to create record for student '.$id.' due to unexpected error');
+							}
 						}
-					}
-					else{
-						Log::warning('User '.Auth::user()->id.' failed to create record for student '.$id.': student doesn\'t belong to group '.$group->id);
-					}
+						else{
+							Log::warning('User '.Auth::user()->id.' failed to create record for student '.$id.': student doesn\'t belong to group '.$group->id);
+						}
+					}	
 				}
 			}
 			else{
@@ -112,8 +123,25 @@ class JournalController extends Controller{
 				Log::warning('User '.Auth::user()->id.' tried to add more than one column: today is '.$today.', last column with date '.$last);
 			}
 		}
+
+		if($request->has('delete')){
+			foreach ($request->input('delete') as $id) {
+				$record = Journal::find($id);
+				if($record 
+					and ($record->editable() or Auth::user()->role->name == 'admin') 
+					and $record->subject_id == $subject->id 
+					and $record->delete()
+				){
+					Log::notice('User'.Auth::user()->id.' deleted record '.$id.'. Soft delete was used');
+				}
+				else{
+					$failed_delete[] = $id;
+					Log::warning('User '.Auth::user()->id.' failed to delete record '.$id.': record not editable, record doesn\'t belong to subject '.$subject->id.', record not found or deleting failed.');
+				}
+			}
+		}
 		
-		if($failed or $failed_new) $errors[] = 'Not all records was saved, contact admin';
+		if($failed or $failed_new or $failed_delete) $errors[] = 'Not all records was updated, contact admin';
 
 		if($request->wantsJson()){
 			if($errors) return response()->json([

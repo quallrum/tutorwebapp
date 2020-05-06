@@ -4,7 +4,7 @@ function setHandlerForAbsentInputs() {
     let arrayOfAbsentInputs = document.querySelectorAll('.absent');
 
     for (let i = 0; i < arrayOfAbsentInputs.length; i++) {
-        arrayOfAbsentInputs[i].addEventListener('input', dineAllSymbolsBesideN);
+        arrayOfAbsentInputs[i].addEventListener('input', dineSymbols);
     }
 };
 
@@ -12,13 +12,23 @@ setHandlerForAbsentInputs();
 
 
 
-function dineAllSymbolsBesideN(e) {
+function dineSymbols(e) {
     let input = e.target;
     let value = input.value;
-    if (e.data !== 'н' || value.length == 2) {
-        value = value.slice(0, value.length - 1);
-        input.value = value;
+    let valueInt = parseInt(value);
+
+    if (!isNaN(valueInt)) {
+        if (valueInt < 0 || valueInt > 100 || value.length === 4) {
+            value = value.slice(0, length - 1);
+            input.value = value;
+        }
+    } else {
+        if (value !== 'н' || value.length === 2) {
+            value = value.slice(0, length - 1);
+            input.value = value;
+        }
     }
+
 }
 
 
@@ -73,24 +83,26 @@ try {
     console.log(e);
 }
 
+let counterForNewColumns = 1;
+
 function addColumn() {
     let arrayOfLines = document.querySelectorAll('.journal__table-line');
 
     let itemWithDate = document.createElement("div");
-    itemWithDate.className = 'journal__table-item journal__table-item--date';
+    itemWithDate.className = 'journal__table-item journal__table-item--date header';
     let currDate = new Date();
     let currDay = String(currDate.getDate());
     let currMonth = String(currDate.getMonth() + 1);
     currMonth = currMonth.length == 1 ? "0" + currMonth : currMonth;
     itemWithDate.innerText = currDay + "." + currMonth;
 
-    let deleteNode = document.createElement('img');
-    deleteNode.src = '/img/bin.svg';
-    deleteNode.alt = 'del';
-    deleteNode.className = 'delete';
-    deleteNode.onclick = deleteColumn;
+    itemWithDate.innerHTML = `
+    ${currDay + "." + currMonth}
+    <div class="delete">
+        <img src="/img/bin.svg" alt="del">
+    </div>
+    `;
 
-    itemWithDate.append(deleteNode);
 
     addColumn = document.getElementById('addColumn');
 
@@ -100,22 +112,32 @@ function addColumn() {
         let studentId = arrayOfLines[i].children[0].getAttribute('data-id');
         let itemWithN = document.createElement('div');
         itemWithN.className = 'journal__table-item';
-        itemWithN.innerHTML = `<input class="absent" type="text" name="new[${studentId}]" value=""/>`;
+        itemWithN.innerHTML = `<input class="absent" type="text" name="new_journal[${counterForNewColumns}][${studentId}]" value=""/>`;
         arrayOfLines[i].append(itemWithN);
     }
     setHandlerForAbsentInputs();
+    setHandlerForDeleteButtons();
+    counterForNewColumns++;
 }
 
 document.getElementById('reloadButton').addEventListener('click', () => { location.reload(); });
 
-try {
-    document.querySelector('.journal__table-item--date .delete').addEventListener('click', deleteColumn);
-} catch (e) {
-    console.log(e);
+
+function setHandlerForDeleteButtons() {
+    try {
+        let array = document.querySelectorAll('.journal__table-item--date .delete img');
+        for (let i = 0; i < array.length; i++) {
+            array[i].addEventListener('click', deleteColumn);
+        }
+    } catch (e) {
+        console.log(e);
+    }
 }
 
+window.addEventListener('load', setHandlerForDeleteButtons);
+
 function deleteColumn(e) {
-    let itemToDelete = e.target.parentNode;
+    let itemToDelete = e.target.parentNode.parentNode;
 
     let arrayOfLines = document.querySelectorAll('.journal__table-line');
     let arrayOfChildren = arrayOfLines[0].children;
@@ -130,6 +152,14 @@ function deleteColumn(e) {
 
     arrayOfLines.forEach(element => {
         let childrenToDelete = element.children[postionOfDeleteItem];
+        let itemId = childrenToDelete.getAttribute('data-itemId');
+        if (itemId !== null) {
+            let hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'delete[]';
+            hiddenInput.value = itemId;
+            form.append(hiddenInput);
+        }
         childrenToDelete.remove();
     });
 }
