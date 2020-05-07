@@ -72,22 +72,28 @@ class JournalController extends Controller{
 
 	public function file(Group $group, Subject $subject){
 
-		$journal = Journal::table($group, $subject);
+		$header = JournalColumn::where('group_id', $group->id)
+			->where('subject_id', $subject->id)
+			->orderBy('created_at')
+			->get();
 
-		$header = ['№', 'ПІБ'];
-		if($i = \array_key_first($journal)){
-			foreach ($journal[$i] as $record) {
-				$header[] = $record->date;
-			}
+		$table = [];
+		$columns = $header->pluck('id');
+		$header = $header->all();
+		foreach ($group->students as $student) {
+			$table[$student->id] = Journal::where('student_id', $student->id)
+				->whereIn('column_id', $columns)
+				->orderBy('column_id')
+				->get();
 		}
 
 		$N = count($header);
-		if ($N < 29) {
-			$n = 29 - $N;
-			array_push($header, ...array_fill(0, $n, ''));
+		if ($N < 27) {
+			$n = 27 - $N;
+			array_push($header, ...array_fill(0, $n, new JournalColumn));
 			foreach ($group->students as $student) {
-				$journal[$student->id] = $journal[$student->id]->all();
-				array_push($journal[$student->id], ...array_fill(0, $n, new Journal));
+				$table[$student->id] = $table[$student->id]->all();
+				array_push($table[$student->id], ...array_fill(0, $n, new Journal));
 			}
 		}
 
@@ -152,14 +158,15 @@ class JournalController extends Controller{
 		$sheet->getCell('A1')->getStyle()->applyFromArray($style_common);
 		$sheet->getCell('B1')->getStyle()->applyFromArray($style_common);
 
-		$sheet->fromArray($header);
-		for($i = 3; $i <= count($header); $i++){
-			$sheet->getCellByColumnAndRow($i, 1)
+		$sheet->fromArray(['№', 'ПІБ']);
+		for($i = 0; $i < count($header); $i++){
+			$sheet->getCellByColumnAndRow($i + 3, 1)
+				->setValue($header[$i]->date)
 				->setDataType(\PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING)
 				->getStyle()->applyFromArray($style_common)
 				->getAlignment()->setTextRotation(90);
 
-			$column = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($i);
+			$column = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($i + 3);
 			$sheet->getColumnDimension($column)->setWidth(4);
 		}
 
@@ -174,7 +181,7 @@ class JournalController extends Controller{
 				->getStyle()->applyFromArray($style_fullname);
 
 			$j = 3;
-			foreach ($journal[$student->id] as $record) {
+			foreach ($table[$student->id] as $record) {
 				$sheet->getCellByColumnAndRow($j, $i)->setValue($record->value)
 					->getStyle()->applyFromArray($style_common);
 				$j++;

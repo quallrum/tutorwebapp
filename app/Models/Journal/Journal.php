@@ -11,13 +11,15 @@ class Journal extends Model{
 
 	protected $table = 'journal_records';
 	protected $fillable = ['student_id', 'value'];
+	protected $attributes = ['value' => 0];
 
 	public function editable(){
 		return (new \DateTime)->format('Y-m-d') === (new \DateTime($this->attributes['created_at']))->format('Y-m-d');
 	}
 
 	public function getDateAttribute(){
-		return (new \DateTime($this->attributes['created_at']))->format('d.m');
+		if(isset($this->attributes['created_at'])) return (new \DateTime($this->attributes['created_at']))->format('d.m');
+		return '';
 	}
 
 	public function getValueAttribute(){
