@@ -41,10 +41,13 @@ class RoleController extends Controller{
 		if($user->role->name == 'tutor'){
 			$tutor = Tutor::find($user->id);
 			if(!$tutor){
-				Log::error('User '.Auth::user()->id.' tried to disassociate role \'tutor\' from user '.$user->id.', tutor record not found');
+				Log::error('User '.Auth::user()->id.' tried to disassociate role \'tutor\' from user '.$user->id.' but tutor record not found');
 				return response('', 500);
 			}
-			if($tutor->delete()) return response('', 500);
+			if(!$tutor->delete()){
+				Log::error('User '.Auth::user()->id.' tried to disassociate role \'tutor\' from user '.$user->id.' but failed to delete tutor record');
+				return response()->json(['message' => 'Failed!'], 500);
+			}
 		}
 
 		$user->role()->associate($role);
