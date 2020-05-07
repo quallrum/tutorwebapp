@@ -12,9 +12,11 @@ class Mark extends Model{
 
 	protected $table = 'mark_records';
 	protected $fillable = ['student_id', 'value'];
+	protected $attributes = ['value' => 0];
 
 	public function getDateAttribute(){
-		return (new \DateTime($this->attributes['created_at']))->format('d.m');
+		if(isset($this->attributes['created_at'])) return (new \DateTime($this->attributes['created_at']))->format('d.m');
+		return '';
 	}
 
 	public function getValueAttribute(){

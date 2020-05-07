@@ -33,7 +33,8 @@ class JournalColumn extends Model{
 	}
 
 	public function getDateAttribute(){
-		return (new \DateTime($this->attributes['created_at']))->format('d.m');
+		if(isset($this->attributes['created_at'])) return (new \DateTime($this->attributes['created_at']))->format('d.m');
+		return '';
 	}
 
 	public function subject(){ return $this->belongsTo(Subject::class); }
