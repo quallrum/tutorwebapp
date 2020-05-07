@@ -23,6 +23,12 @@
 			<div class="{{ $subject->type->name }}"></div>
 			{{-- <a class="journal__subject-button">Изменить предмет</a> --}}
 		</div>
+		<ul class="nav nav-tabs">
+			<li class="nav-item"><a class="nav-link active">Посещаемость</a></li>
+			@if ($subject->hasMarks())
+				<li class="nav-item"><a class="nav-link" href="{{ route('mark.show', ['group' => $group->id, 'subject' => $subject->id]) }}">Оценки</a></li>
+			@endif
+		</ul>
 		@can('journal.edit')
 			<form action="" method="post" name="journal">
 			@csrf
