@@ -9,15 +9,15 @@ use App\Models\User;
 use App\Models\Tutor;
 use App\Models\Role;
 
-class RolesController extends Controller{
+class RoleController extends Controller{
 	
 	public function index(){
-		$this->authorize('roles.list');
+		$this->authorize('role.list');
 
 		$users = User::where('id', '>', 1)->orderBy('email', 'asc')->get();
 		$roles = Role::all();
 
-		return view('roles.index', [
+		return view('role.index', [
 			'users'	=> $users,
 			'roles'	=> $roles,
 		]);
@@ -32,7 +32,7 @@ class RolesController extends Controller{
 		$user = User::find($data['user']);
 		$role = Role::find($data['role']);
 
-		$this->authorize('roles.change', [$user, $role]);
+		$this->authorize('role.change', [$user, $role]);
 		if($user->id == 1) return response('', 403);
 		if($user->role->id == $role->id) return response()->json(['message' => 'Not modified.'], 200);
 

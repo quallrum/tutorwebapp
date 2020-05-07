@@ -15,7 +15,7 @@
 @section('content')
 	<section class="container-fluid adminRoles">
 		<h1 class="adminRoles__heading">Роли пользователей</h1>
-		<form action="{{ route('roles.role') }}" method="post" name="adminRolesForm">
+		<form action="{{ route('role.role') }}" method="post" name="adminRolesForm">
 			<input type="hidden" name="_token" id="token" value="{{ csrf_token() }}"/>
 			<div class="adminRoles__table">
 				@if ($users)
