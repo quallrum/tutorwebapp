@@ -90,12 +90,12 @@ class JournalController extends Controller{
 
 					if(!$record->save()){
 						$failed[] = $id;
-						Log::error('User '.Auth::user()->id.' failed to update record '.$id.' due to unexpected error');
+						Log::error('User '.Auth::user()->id.' failed to update journal record '.$id.' due to unexpected error');
 					}
 				}
 				else{
 					$failed[] = $id;
-					Log::warning('User '.Auth::user()->id.' failed to update record '.$id.': record not editable, record doesn\'t belong to subject '.$subject->id.' or record not found');
+					Log::warning('User '.Auth::user()->id.' failed to update journal record '.$id.': record not editable, record doesn\'t belong to subject '.$subject->id.' or record not found');
 				}
 			}
 		}
@@ -108,7 +108,7 @@ class JournalController extends Controller{
 					$column->group_id = $group->id;
 
 					if(!$column->save() and !$column->save()){
-						Log::warning('User '.Auth::user()->id.' failed to create new column due to unexpected error');
+						Log::warning('User '.Auth::user()->id.' failed to create new journal column due to unexpected error');
 						$failed_new[] = 'column';
 						continue;
 					}
@@ -122,18 +122,18 @@ class JournalController extends Controller{
 
 							if(!$record->save()){
 								$failed_new[] = $id;
-								Log::error('User '.Auth::user()->id.' failed to create record for student '.$id.' due to unexpected error');
+								Log::error('User '.Auth::user()->id.' failed to create journal record for student '.$id.' due to unexpected error');
 							}
 						}
 						else{
-							Log::warning('User '.Auth::user()->id.' failed to create record for student '.$id.': student doesn\'t belong to group '.$group->id);
+							Log::warning('User '.Auth::user()->id.' failed to create journal record for student '.$id.': student doesn\'t belong to group '.$group->id);
 						}
 					}	
 				}
 			}
 			else{
 				$errors[] = 'You can add only one column per day';
-				Log::warning('User '.Auth::user()->id.' tried to add more than one column: today is '.$today.', last column with date '.$last);
+				Log::warning('User '.Auth::user()->id.' tried to add more than one journal column today for group '.$group->id.' and subject '.$subject->id);
 			}
 		}
 
@@ -143,11 +143,11 @@ class JournalController extends Controller{
 
 				if($column and ($column->editable() or Auth::user()->role->name == 'admin') and $column->subject_id == $subject->id){
 					if($column->delete() and $column->records()->delete()) Log::notice('User'.Auth::user()->id.' deleted column '.$id.'. Soft delete was used');
-					else Log::error('User '.Auth::user()->id.' failed to delete column '.$id.' due to unexpected error');
+					else Log::error('User '.Auth::user()->id.' failed to delete journal column '.$id.' due to unexpected error');
 				}
 				else{
 					$failed_delete[] = $id;
-					Log::warning('User '.Auth::user()->id.' failed to delete record '.$id.': record not editable, record doesn\'t belong to subject '.$subject->id.', record not found or deleting failed.');
+					Log::warning('User '.Auth::user()->id.' failed to delete journal column '.$id.': column not editable, column doesn\'t belong to subject '.$subject->id.', column not found or deleting failed.');
 				}
 			}
 		}

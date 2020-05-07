@@ -94,12 +94,12 @@ class MarkController extends Controller{
 				
 					if(!$column->save()){
 						$failed[] = $id;
-						Log::error('User '.Auth::user()->id.' failed to update column '.$id.' due to unexpected error');
+						Log::error('User '.Auth::user()->id.' failed to update mark column '.$id.' due to unexpected error');
 					}
 				}
 				else{
 					$failed[] = $id;
-					Log::warning('User '.Auth::user()->id.' failed to update column '.$id.': column doesn\'t belong to subject '.$subject->id.' or column not found');
+					Log::warning('User '.Auth::user()->id.' failed to update mark column '.$id.': column doesn\'t belong to subject '.$subject->id.' or column not found');
 				}
 			}
 		}
@@ -113,12 +113,12 @@ class MarkController extends Controller{
 				
 					if(!$record->save()){
 						$failed[] = $id;
-						Log::error('User '.Auth::user()->id.' failed to update record '.$id.' due to unexpected error');
+						Log::error('User '.Auth::user()->id.' failed to update mark record '.$id.' due to unexpected error');
 					}
 				}
 				else{
 					$failed[] = $id;
-					Log::warning('User '.Auth::user()->id.' failed to update record '.$id.': record doesn\'t belong to subject '.$subject->id.' or record not found');
+					Log::warning('User '.Auth::user()->id.' failed to update mark record '.$id.': record doesn\'t belong to subject '.$subject->id.' or record not found');
 				}
 			}
 		}
@@ -131,7 +131,7 @@ class MarkController extends Controller{
 				$column->title = $new_column_title;
 
 				if(!$column->save() and !$column->save()){
-					Log::warning('User '.Auth::user()->id.' failed to create new column due to unexpected error');
+					Log::warning('User '.Auth::user()->id.' failed to create new mark column due to unexpected error');
 					$failed_new[] = 'column';
 					continue;
 				}
@@ -147,17 +147,17 @@ class MarkController extends Controller{
 
 							if(!$record->save() and !$record->save()){
 								$failed_new[] = $id;
-								Log::error('User '.Auth::user()->id.' failed to create record for student '.$id.' due to unexpected error');
+								Log::error('User '.Auth::user()->id.' failed to create mark record for student '.$id.' due to unexpected error');
 							}
 						}
 						else{
-							Log::warning('User '.Auth::user()->id.' failed to create record for student '.$id.': student doesn\'t belong to group '.$group->id);
+							Log::warning('User '.Auth::user()->id.' failed to create mark record for student '.$id.': student doesn\'t belong to group '.$group->id);
 						}
 					}
 				}
 				else{
 					$failed_new[] = $column->id;
-					Log::warning('User '.Auth::user()->id.' failed to create column: no cell for column provided');
+					Log::warning('User '.Auth::user()->id.' failed to create mark column: no cell for column provided');
 				}
 			}
 		}
@@ -167,12 +167,12 @@ class MarkController extends Controller{
 				$column = MarkColumn::find($id);
 
 				if($column and $column->subject_id == $subject->id){
-					if($column->delete() and $column->records()->delete()) Log::notice('User'.Auth::user()->id.' deleted columnd '.$id.'. Soft delete was used');
-					else Log::error('User '.Auth::user()->id.' failed to delete column '.$id.' due to unexpected error');
+					if($column->delete() and $column->records()->delete()) Log::notice('User'.Auth::user()->id.' deleted mark column '.$id.'. Soft delete was used');
+					else Log::error('User '.Auth::user()->id.' failed to delete mark column '.$id.' due to unexpected error');
 				}
 				else{
 					$failed_delete[] = $id;
-					Log::warning('User '.Auth::user()->id.' failed to delete column '.$id.':  record doesn\'t belong to subject '.$subject->id.', record not found or deleting failed.');
+					Log::warning('User '.Auth::user()->id.' failed to delete mark column '.$id.':  record doesn\'t belong to subject '.$subject->id.', record not found or deleting failed.');
 				}
 			}
 		}
