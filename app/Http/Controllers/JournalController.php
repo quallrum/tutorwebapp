@@ -9,11 +9,11 @@ use App\Models\Group;
 use App\Models\Subject;
 use App\Models\Journal\Journal;
 use App\Models\Journal\JournalColumn;
-
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use App\Traits\CreatesGroupSubjectExcel;
 
 class JournalController extends Controller{
+
+	use CreatesGroupSubjectExcel;
 	
 	public function group(){
 		$this->authorize('journal.changeGroup');
@@ -79,120 +79,23 @@ class JournalController extends Controller{
 
 		$table = [];
 		$columns = $header->pluck('id');
-		$header = $header->all();
 		foreach ($group->students as $student) {
-			$table[$student->id] = Journal::where('student_id', $student->id)
+			$table[] = Journal::where('student_id', $student->id)
 				->whereIn('column_id', $columns)
 				->orderBy('column_id')
-				->get();
+				->get()->pluck('value')->all();
 		}
 
-		$N = count($header);
-		if ($N < 27) {
-			$n = 27 - $N;
-			array_push($header, ...array_fill(0, $n, new JournalColumn));
-			foreach ($group->students as $student) {
-				$table[$student->id] = $table[$student->id]->all();
-				array_push($table[$student->id], ...array_fill(0, $n, new Journal));
-			}
-		}
-
-		$spreadsheet = new Spreadsheet();
-		$sheet = $spreadsheet->getActiveSheet();
-		$sheet->setTitle('Журнал '.$group->title);
-		$sheet->getPageSetup()
-			->setPaperSize(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_A4)
-			->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
-		$sheet->getPageMargins()
-			->setTop(0.4)->setBottom(0.4)
-			->setLeft(0.4)->setRight(0.4);
-
-		$borders = [
-			'top'		=> [
-				'borderStyle' 	=> \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-				'color'			=> ['rgb' => '000000'],
-			],
-			'bottom'	=> [
-				'borderStyle' 	=> \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-				'color'			=> ['rgb' => '000000'],
-			],
-			'left'		=> [
-				'borderStyle' 	=> \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-				'color'			=> ['rgb' => '000000'],
-			],
-			'right'		=> [
-				'borderStyle' 	=> \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-				'color'			=> ['rgb' => '000000'],
-			],
-		];
-
-		$style_common = [
-			'alignment'	=> [
-				'horizontal'	=> \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-				'vertical'		=> \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-			],
-			'borders'	=> $borders,
-		];
-
-		$style_fullname = [
-			'alignment'	=> [
-				'horizontal'	=> \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
-				'vertical'		=> \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-			],
-			'borders'	=> $borders,
-			'alignment'	=> ['wrapText' => true],
-		];
-
-		$style_number = [
-			'alignment'	=> [
-				'horizontal'	=> \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT,
-				'vertical'		=> \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-			],
-			'borders'	=> $borders,
-		];
-
-		$sheet->getColumnDimension('A')->setWidth(3);
-		$sheet->getColumnDimension('B')->setWidth(27);
-		$sheet->getRowDimension('1')->setRowHeight(30);
+		$file = $this->createExcel(
+			$header->pluck('date')->all(),
+			$group->students->pluck('shortname')->all(),
+			$table,
+			$group->title,
+			'Журнал '.$group->title
+		);
 		
-		$sheet->getCell('A1')->getStyle()->applyFromArray($style_common);
-		$sheet->getCell('B1')->getStyle()->applyFromArray($style_common);
-
-		$sheet->fromArray(['№', 'ПІБ']);
-		for($i = 0; $i < count($header); $i++){
-			$sheet->getCellByColumnAndRow($i + 3, 1)
-				->setValue($header[$i]->date)
-				->setDataType(\PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING)
-				->getStyle()->applyFromArray($style_common)
-				->getAlignment()->setTextRotation(90);
-
-			$column = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($i + 3);
-			$sheet->getColumnDimension($column)->setWidth(4);
-		}
-
-		$i = 2;
-		foreach ($group->students as $student) {
-			$sheet->getRowDimension($i)->setRowHeight(16);
-			
-			$sheet->getCell('A'.$i)->setValue($i - 1)
-				->getStyle()->applyFromArray($style_number);
-
-			$sheet->getCell('B'.$i)->setValue($student->lastname.' '.$student->firstname)
-				->getStyle()->applyFromArray($style_fullname);
-
-			$j = 3;
-			foreach ($table[$student->id] as $record) {
-				$sheet->getCellByColumnAndRow($j, $i)->setValue($record->value)
-					->getStyle()->applyFromArray($style_common);
-				$j++;
-			}
-			$i++;
-		}
-		
-		$writer = new Xlsx($spreadsheet);
-
-		return response()->streamDownload(function() use ($writer){
-			$writer->save('php://output');
+		return response()->streamDownload(function() use ($file){
+			$file->save('php://output');
 		}, $group->title.'.xlsx');
 	}
 

@@ -8,6 +8,11 @@ class Student extends Model{
 
     protected $fillable = ['firstname', 'lastname', 'fathername'];
 
+    public function getShortnameAttribute(){
+        return $this->attributes['lastname'].' '.
+                $this->attributes['firstname'];
+    }
+
     public function getFullnameAttribute(){
         return $this->attributes['lastname'].' '.
                 $this->attributes['firstname'].' '.

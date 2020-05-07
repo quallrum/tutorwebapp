@@ -9,9 +9,12 @@ use App\Models\Group;
 use App\Models\Subject;
 use App\Models\Mark\Mark;
 use App\Models\Mark\MarkColumn;
+use App\Traits\CreatesGroupSubjectExcel;
 
 class MarkController extends Controller{
 	
+	use CreatesGroupSubjectExcel;
+
 	public function group(){
 		$this->authorize('mark.changeGroup');
 		$user = Auth::user();
@@ -67,6 +70,35 @@ class MarkController extends Controller{
 			'header'	=> $header,
 			'table'		=> $table,
 		]);
+	}
+
+	public function file(Group $group, Subject $subject){
+
+		$header = MarkColumn::where('group_id', $group->id)
+			->where('subject_id', $subject->id)
+			->orderBy('created_at')
+			->get();
+
+		$table = [];
+		$columns = $header->pluck('id');
+		foreach ($group->students as $student) {
+			$table[] = Mark::where('student_id', $student->id)
+				->whereIn('column_id', $columns)
+				->orderBy('column_id')
+				->get()->pluck('value')->all();
+		}
+
+		$file = $this->createExcel(
+			$header->pluck('title')->all(),
+			$group->students->pluck('shortname')->all(),
+			$table,
+			$group->title,
+			'Журнал '.$group->title
+		);
+		
+		return response()->streamDownload(function() use ($file){
+			$file->save('php://output');
+		}, $group->title.'.xlsx');
 	}
 
 	public function update(Group $group, Subject $subject, Request $request){
