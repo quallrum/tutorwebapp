@@ -33,6 +33,12 @@ Route::group([
 		Route::get('/{group}/{subject}', 'JournalController@show')->name('show');
 		Route::post('/{group}/{subject}', 'JournalController@update');
 	});
+	Route::name('mark.')->prefix('/mark')->group(function(){
+		Route::get('/', 'MarkController@group')->name('group');
+		Route::get('/{group}', 'MarkController@subject')->name('subject');
+		Route::get('/{group}/{subject}', 'MarkController@show')->name('show');
+		Route::post('/{group}/{subject}', 'MarkController@update');
+	});
 	Route::resource('group', 'GroupController')->except(['show']);
 	Route::prefix('/group/{group}')->name('group.')->group(function(){
 		Route::post('/tutors', 'GroupController@subjectTutors')->name('tutors');
