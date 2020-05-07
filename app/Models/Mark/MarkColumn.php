@@ -13,5 +13,5 @@ class MarkColumn extends Model{
 
 	public function subject(){ return $this->belongsTo(Subject::class); }
 	public function group(){ return $this->belongsTo(Group::class); }
-	public function records(){ return $this->hasMany(Mark::class); }
+	public function records(){ return $this->hasMany(Mark::class, 'column_id'); }
 }

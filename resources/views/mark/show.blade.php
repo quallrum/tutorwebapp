@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Журнал '.$group->title)
+@section('title', 'Оценки '.$group->title)
 
 @section('head')
 	<link rel="stylesheet" href="/css/main.min.css"/>
 @endsection
 
 @section('scripts')
-	<script src="/js/mark.js"></script>
+	<script src="/js/marks.js"></script>
 @endsection
 
 @section('content')
@@ -24,7 +24,7 @@
 			{{-- <a class="journal__subject-button">Изменить предмет</a> --}}
 		</div>
 		@can('mark.edit')
-			<form action="" method="post" name="journal">
+			<form action="" method="post" name="marks" id="marks">
 			@csrf
 		@endcan
 			<div class="journal__table">
@@ -32,15 +32,15 @@
 					<div class="journal__table-item">ФИО</div>					
 					@if($user->can('mark.edit'))
 						@foreach ($header as $column)
-							<div class="journal__table-item journal__table-item--date">
+							<div class="journal__table-item journal__table-item--date" data-columnId="{{ $column->id }}" >
 								<input class="header" type="text" name="header[{{ $column->id }}]" value="{{ $column->title }}">
 								<div class="delete"><img src="/img/bin.svg" alt="del"/></div>
 							</div>
 						@endforeach
-						<div class="journal__addColumn" id="addColumn"><img src="/img/plusSign.svg" alt="add"/></div>
+						<div class="journal__addColumn" id="marksAddColumn"><img src="/img/plusSign.svg" alt="add"/></div>
 					@else
 						@foreach ($header as $column)
-							<div class="journal__table-item journal__table-item--date">{{ $column->title }}</div>
+							<div class="journal__table-item journal__table-item--date" data-columnId="{{ $column->id }}" >{{ $column->title }}</div>
 						@endforeach
 					@endif
 				</div>
@@ -50,7 +50,7 @@
 						@if($user->can('mark.edit'))
 							@foreach ($table[$student->id] as $record)
 								<div class="journal__table-item" data-itemId="{{ $record->id }}">
-									<input class="absent" type="text" name="journal[{{ $record->id }}]" value="{{ $record->value }}"/>
+									<input class="absent" type="text" name="mark[{{ $record->id }}]" value="{{ $record->value }}"/>
 								</div>
 							@endforeach
 						@else
