@@ -48,9 +48,9 @@ Route::group([
 		Route::post('/password', 'GroupController@updatePassword')->name('password');
 		Route::post('/accounts', 'GroupController@updateAccounts')->name('accounts');
 	});
-	Route::prefix('/roles')->name('roles.')->group(function(){
-		Route::get('/', 'RolesController@index')->name('index');
-		Route::post('/role', 'RolesController@role')->name('role');
+	Route::prefix('/role')->name('role.')->group(function(){
+		Route::get('/', 'RoleController@index')->name('index');
+		Route::post('/', 'RoleController@role')->name('role');
 	});
 	Route::resource('subject', 'SubjectController')->except(['show']);
 	Route::prefix('/subject/{subject}')->name('subject.')->group(function(){
