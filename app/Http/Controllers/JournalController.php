@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Models\Group;
 use App\Models\Subject;
-use App\Models\Journal;
+use App\Models\Journal\Journal;
+use App\Models\Journal\JournalColumn;
 
 class JournalController extends Controller{
 	
@@ -42,22 +43,27 @@ class JournalController extends Controller{
 
 	public function show(Group $group, Subject $subject){
 		$this->authorize('journal.view');
-
-		$journal = Journal::table($group, $subject);
-
-		$header = [];
-		if($i = \array_key_first($journal)){
-			foreach ($journal[$i] as $record) {
-				$header[] = $record->date;
-			}
-		}
 		
+		$header = JournalColumn::where('group_id', $group->id)
+			->where('subject_id', $subject->id)
+			->orderBy('created_at')
+			->get();
+
+		$table = [];
+		$columns = $header->pluck('id');
+		foreach ($group->students as $student) {
+			$table[$student->id] = Journal::where('student_id', $student->id)
+				->whereIn('column_id', $columns)
+				->orderBy('column_id')
+				->get();
+		}
+
 		return view('journal.show', [
 			'user'		=> Auth::user(),
 			'group' 	=> $group,
 			'subject'	=> $subject,
 			'header'	=> $header,
-			'journal'	=> $journal,
+			'table'		=> $table,
 		]);
 	}
 
@@ -66,7 +72,6 @@ class JournalController extends Controller{
 
 		$request->validate([
 			'journal'		=> ['nullable', 'array'],
-			'new_header'	=> ['nullable', 'array'],
 			'new_journal'	=> ['nullable', 'array'],
 			'delete'		=> ['nullable', 'array'],
 		]);
@@ -79,8 +84,10 @@ class JournalController extends Controller{
 		if($request->input('journal')){
 			foreach ($request->input('journal') as $id => $value) {
 				$record = Journal::find($id);
-				if($record and ($record->editable() or Auth::user()->role->name == 'admin') and $record->subject_id == $subject->id){
+
+				if($record and ($record->editable() or Auth::user()->role->name == 'admin') and $record->column->subject_id == $subject->id){
 					$record->value = $value;
+
 					if(!$record->save()){
 						$failed[] = $id;
 						Log::error('User '.Auth::user()->id.' failed to update record '.$id.' due to unexpected error');
@@ -94,19 +101,25 @@ class JournalController extends Controller{
 		}
 		
 		if($request->input('new_journal')){
-			$today = (new \Datetime)->format('Y-m-d');
-			$last = Journal::lastDate($group->students()->first(), $subject);
+			if(JournalColumn::canAdd($group, $subject) or Auth::user()->role->name == 'admin'){
+				foreach ($request->input('new_journal') as $new_column) {
+					$column = new JournalColumn;
+					$column->subject_id = $subject->id;
+					$column->group_id = $group->id;
 
-			if($today != $last or Auth::user()->role->name == 'admin'){
-				foreach ($request->input('new_journal') as $column) {
-					foreach ($column as $id => $value) {
+					if(!$column->save() and !$column->save()){
+						Log::warning('User '.Auth::user()->id.' failed to create new column due to unexpected error');
+						$failed_new[] = 'column';
+						continue;
+					}
+
+					foreach ($new_column as $id => $value) {
 						if($group->hasStudent($id)){
 							$record = new Journal;
-							$record->fill([
-								'student_id'	=> $id,
-								'subject_id'	=> $subject->id,
-							]);
+							$record->column_id = $column->id;
+							$record->student_id = $id;
 							$record->value = $value;
+
 							if(!$record->save()){
 								$failed_new[] = $id;
 								Log::error('User '.Auth::user()->id.' failed to create record for student '.$id.' due to unexpected error');
@@ -126,13 +139,11 @@ class JournalController extends Controller{
 
 		if($request->has('delete')){
 			foreach ($request->input('delete') as $id) {
-				$record = Journal::find($id);
-				if($record 
-					and ($record->editable() or Auth::user()->role->name == 'admin') 
-					and $record->subject_id == $subject->id 
-					and $record->delete()
-				){
-					Log::notice('User'.Auth::user()->id.' deleted record '.$id.'. Soft delete was used');
+				$column = JournalColumn::find($id);
+
+				if($column and ($column->editable() or Auth::user()->role->name == 'admin') and $column->subject_id == $subject->id){
+					if($column->delete() and $column->records()->delete()) Log::notice('User'.Auth::user()->id.' deleted column '.$id.'. Soft delete was used');
+					else Log::error('User '.Auth::user()->id.' failed to delete column '.$id.' due to unexpected error');
 				}
 				else{
 					$failed_delete[] = $id;
