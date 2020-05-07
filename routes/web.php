@@ -39,6 +39,7 @@ Route::group([
 		Route::get('/{group}', 'MarkController@subject')->name('subject');
 		Route::get('/{group}/{subject}', 'MarkController@show')->name('show');
 		Route::post('/{group}/{subject}', 'MarkController@update');
+		Route::get('/{group}/{subject}/file', 'MarkController@file')->name('file');
 	});
 	Route::resource('group', 'GroupController')->except(['show']);
 	Route::prefix('/group/{group}')->name('group.')->group(function(){
