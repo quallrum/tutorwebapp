@@ -33,10 +33,8 @@
 					@if($user->can('mark.edit'))
 						@foreach ($header as $column)
 							<div class="journal__table-item journal__table-item--date">
-								{{ $column->title }}
-								@if ($table[$group->students()->first()->id]->first()->editable() or $user->role->name == 'admin')
-									<div class="delete"><img src="/img/bin.svg" alt="del"/></div>
-								@endif
+								<input class="header" type="text" name="header[{{ $column->id }}]" value="{{ $column->title }}">
+								<div class="delete"><img src="/img/bin.svg" alt="del"/></div>
 							</div>
 						@endforeach
 						<div class="journal__addColumn" id="addColumn"><img src="/img/plusSign.svg" alt="add"/></div>
@@ -52,11 +50,7 @@
 						@if($user->can('mark.edit'))
 							@foreach ($table[$student->id] as $record)
 								<div class="journal__table-item" data-itemId="{{ $record->id }}">
-									@if ($record->editable() or $user->role->name == 'admin')
-										<input class="absent" type="text" name="journal[{{ $record->id }}]" value="{{ $record->value }}"/>
-									@else
-										{{ $record->value }}
-									@endif
+									<input class="absent" type="text" name="journal[{{ $record->id }}]" value="{{ $record->value }}"/>
 								</div>
 							@endforeach
 						@else
