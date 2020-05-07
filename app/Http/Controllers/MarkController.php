@@ -124,10 +124,11 @@ class MarkController extends Controller{
 		}
 		
 		if($request->has('new_header') and $request->has('new_mark')){
-			foreach ($request->input('new_header') as $new_column) {
+			foreach ($request->input('new_header') as $new_column_id => $new_column_title) {
 				$column = new MarkColumn;
 				$column->subject_id = $subject->id;
 				$column->group_id = $group->id;
+				$column->title = $new_column_title;
 
 				if(!$column->save() and !$column->save()){
 					Log::warning('User '.Auth::user()->id.' failed to create new column due to unexpected error');
@@ -135,30 +136,38 @@ class MarkController extends Controller{
 					continue;
 				}
 				
-				foreach ($new_column as $id => $value) {
-					if($group->hasStudent($id)){
-						$record = new Mark;
-						$record->column_id = $column->id;
-						$record->student_id	= $id;
-						$record->value = $value;
+				$new_marks = $request->input('new_mark');
+				if(isset($new_marks[$new_column_id]) and is_array($new_marks[$new_column_id])){
+					foreach ($new_marks[$new_column_id] as $id => $value) {
+						if($group->hasStudent($id)){
+							$record = new Mark;
+							$record->column_id = $column->id;
+							$record->student_id	= $id;
+							$record->value = $value;
 
-						if(!$record->save() and !$record->save()){
-							$failed_new[] = $id;
-							Log::error('User '.Auth::user()->id.' failed to create record for student '.$id.' due to unexpected error');
+							if(!$record->save() and !$record->save()){
+								$failed_new[] = $id;
+								Log::error('User '.Auth::user()->id.' failed to create record for student '.$id.' due to unexpected error');
+							}
+						}
+						else{
+							Log::warning('User '.Auth::user()->id.' failed to create record for student '.$id.': student doesn\'t belong to group '.$group->id);
 						}
 					}
-					else{
-						Log::warning('User '.Auth::user()->id.' failed to create record for student '.$id.': student doesn\'t belong to group '.$group->id);
-					}
-				}	
+				}
+				else{
+					$failed_new[] = $column->id;
+					Log::warning('User '.Auth::user()->id.' failed to create column: no cell for column provided');
+				}
 			}
 		}
 
 		if($request->has('delete')){
-			foreach ($request->input('delete') as $column) {
+			foreach ($request->input('delete') as $id) {
 				$column = MarkColumn::find($id);
-				if($column and $column->column->subject_id == $subject->id){
-					if($column->records()->delete() and $column->delete()) Log::notice('User'.Auth::user()->id.' deleted columnd '.$id.'. Soft delete was used');
+
+				if($column and $column->subject_id == $subject->id){
+					if($column->delete() and $column->records()->delete()) Log::notice('User'.Auth::user()->id.' deleted columnd '.$id.'. Soft delete was used');
 					else Log::error('User '.Auth::user()->id.' failed to delete column '.$id.' due to unexpected error');
 				}
 				else{
