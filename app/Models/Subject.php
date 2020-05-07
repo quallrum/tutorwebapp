@@ -17,26 +17,29 @@ class Subject extends Model{
 		return false;
 	}
 
-	public function scopeofGroup($query, $group){
+	public function scopeOfGroup($query, $group){
 		$group = $group instanceof Group ? $group->id : $group;
 		
 		if($this->joined($query, 'group_subject')) return $query->where('group_subject.group_id', $group);
 		else return $query->join('group_subject', 'subjects.id', '=', 'group_subject.subject_id')
 			->where('group_subject.group_id', $group);
-			// ->groupBy('group_subject.group_id');
-			// ->get('groups.*');
 	}
 
-
-	public function scopeofTutor($query, $user){
+	public function scopeOfTutor($query, $user){
 		$user = $user instanceof User ? $user->id : $user;
 		
 		if($this->joined($query, 'group_subject')) return $query->where('group_subject.tutor_id', $user);
 		return $query->join('group_subject', 'subjects.id', '=', 'group_subject.subject_id')
 			->where('group_subject.tutor_id', $user);
-			// ->groupBy('group_subject.group_id');
-			// ->get('groups.*');
-	}    
+	}
+
+	public function scopeWithMarks($query){
+		return $query->whereIn('type_id', SubjectType::$hasMarks);
+	}
+
+	public function hasMarks(){
+		return SubjectType::hasMarks($this->type);
+	}
 	
 	public function hasTutor($tutor){
 		$tutor = $tutor instanceof Tutor ? $tutor->user_id : $tutor;
