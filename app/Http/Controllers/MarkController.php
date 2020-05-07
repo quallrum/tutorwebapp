@@ -43,6 +43,8 @@ class MarkController extends Controller{
 
 	public function show(Group $group, Subject $subject){
 		$this->authorize('mark.view');
+
+		if(!$subject->hasMarks()) return redirect()->route('mark.subject', ['group' => $group->id]);
 		
 		$header = MarkColumn::where('group_id', $group->id)
 			->where('subject_id', $subject->id)
