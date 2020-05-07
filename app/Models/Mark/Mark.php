@@ -37,27 +37,11 @@ class Mark extends Model{
 	}
 
 	public function getValueAttribute(){
-		if($this->attributes['value'] === null) return 'н';
-		else return $this->attributes['value'] == 0 ? '' : $this->attributes['value'];
+		return $this->attributes['value'] === null ? null : $this->attributes['value'];
 	}
 	
 	public function setValueAttribute($value){
-		if($value == 'н') return $this->attributes['value'] = null;
-		else return $value == '' ? $this->attributes['value'] = 0 : $this->attributes['value'] = $value;
-	}
-
-	public static function table(Group $group, Subject $subject){
-		$students = $group->students()->pluck('id')->all();
-		$journal  = [];
-
-		foreach ($students as $id) {
-			$journal[$id] = static::where('subject_id', $subject->id)
-				->where('student_id', $id)
-				->orderBy('created_at')
-				->get();
-		}
-
-		return $journal;
+		return $value == '' ? $this->attributes['value'] = null : $this->attributes['value'] = $value;
 	}
 
 	public function column(){ return $this->belongsTo(MarkColumn::class); }
