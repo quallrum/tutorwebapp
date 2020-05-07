@@ -79,6 +79,7 @@
 			<div class="journal__buttons">
 				<button class="journal__submit" type="submit">сохранить</button>
 				<div class="journal__reload" id="reloadButton">отменить</div>
+				<a class="journal__download" href="{{ route('journal.file', ['group' => $group->id, 'subject' => $subject->id]) }}" download="download">скачать</a>
 			</div>
 			</form>
 		@endcan
