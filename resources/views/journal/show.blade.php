@@ -14,14 +14,16 @@
 	<section class="container-fluid journal">
 		<div class="journal__group">
 			<h2 class="journal__group-heading">{{ $group->title }}</h2>
-			@can('group.edit', $group)
-				<a class="journal__group-button" href="{{ route('group.edit', ['group'=>$group->id]) }}">Изменить группу</a>
+			@can('journal.changeGroup', $group)
+				<a class="journal__group-button" href="{{ route('journal.group') }}">Изменить группу</a>
 			@endcan
 		</div>
 		<div class="journal__subject">
 			<h2 class="journal__subject-heading">{{ $subject->title }}</h2>
 			<div class="{{ $subject->type->name }}"></div>
-			{{-- <a class="journal__subject-button">Изменить предмет</a> --}}
+			@can('journal.changeSubject', $group)
+				<a class="journal__subject-button" href="{{ route('journal.subject', ['group'=>$group->id]) }}">Изменить предмет</a>
+			@endcan
 		</div>
 		<ul class="nav nav-tabs">
 			<li class="nav-item"><a class="nav-link active">Посещаемость</a></li>
