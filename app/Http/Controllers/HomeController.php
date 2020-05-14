@@ -72,7 +72,7 @@ class HomeController extends Controller{
 		if($user->role->name != 'tutor') return response('', 403);
         
         $data = $request->validate([
-            'telegram'		=> ['required', 'string', 'min:1', 'max:200'],
+            'telegram'		=> ['required', 'string', 'min:1', 'max:200', 'unique:tutors'],
 		]);
 		
 		$tutor = Tutor::findOrFail($user->id);
