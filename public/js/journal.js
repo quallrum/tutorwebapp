@@ -1,5 +1,8 @@
 'use strict';
 
+import { sendAJAX, defaultAjaxErrorHandler } from './xhr.js';
+
+
 function setHandlerForAbsentInputs() {
     let arrayOfAbsentInputs = document.querySelectorAll('.absent');
 
@@ -27,41 +30,50 @@ form.addEventListener('submit', function (e) {
     let formData = new FormData(this);
     let action = this.getAttribute('action');
 
-    sendAjax(formData, action);
+    // sendAjax(formData, action);
+    sendAJAX('POST', action, formData)
+        .then(data => {
+            putTextInSuccessAlertAndShowIt('Данные успешно обновлены');
+        })
+        .catch(data => {
+            defaultAjaxErrorHandler(data);
+        });
 });
 
-function sendAjax(formData, action) {
-    let xhr = new XMLHttpRequest();
-    try {
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) {
-                if (xhr.status == 200) {
-                    putTextInSuccessAlertAndShowIt('Данные успешно обновлены');
-                } else {
-                    try {
-                        let arrayJSON = JSON.parse(xhr.responseText);
-                        let strToShow = '';
-                        for (let i in arrayJSON.errors) {
-                            strToShow += i + '\n';
-                        }
-                        putTextInAlertAndShowIt(strToShow);
+// function sendAjax(formData, action) {
+//     let xhr = new XMLHttpRequest();
+//     try {
+//         xhr.onreadystatechange = function () {
+//             if (xhr.readyState === 4) {
+//                 if (xhr.status == 200) {
+//                     putTextInSuccessAlertAndShowIt('Данные успешно обновлены');
+//                 } else {
+//                     try {
+//                         let arrayJSON = JSON.parse(xhr.responseText);
+//                         let errors = arrayJSON.errors;
 
-                    } catch (e) {
-                        putTextInAlertAndShowIt('Упс, что-то пошло не так(');
-                        throw new Error(xhr.status + " : " + xhr.statusText);
-                    }
-                }
-            }
-        }
+//                         let strWithError = '';
+//                         for (let error in errors) {
+//                             strWithError += errors[error][0] + '\n';
+//                         }
+//                         putTextInAlertAndShowIt(strWithError);
 
-        xhr.open('POST', action);
-        xhr.setRequestHeader('Accept', 'application/json')
-        xhr.send(formData);
+//                     } catch (e) {
+//                         putTextInAlertAndShowIt('Упс, что-то пошло не так(');
+//                         throw new Error(xhr.status + " : " + xhr.statusText);
+//                     }
+//                 }
+//             }
+//         }
 
-    } catch (e) {
-        console.log(e);
-    }
-}
+//         xhr.open('POST', action);
+//         xhr.setRequestHeader('Accept', 'application/json');
+//         xhr.send(formData);
+
+//     } catch (e) {
+//         console.log(e);
+//     }
+// }
 
 
 try {

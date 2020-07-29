@@ -8,7 +8,7 @@
 
 @section('scripts')
 	<script src="/js/alerts.js"></script>
-	<script src="/js/adminEditSubject.js"></script>
+	<script src="/js/adminEditSubject.js" type="module"></script>
 @endsection
 
 @section('content')

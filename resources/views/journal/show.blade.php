@@ -7,7 +7,7 @@
 @endsection
 
 @section('scripts')
-	<script src="/js/journal.js"></script>
+	<script src="/js/journal.js" type="module"></script>
 @endsection
 
 @section('content')

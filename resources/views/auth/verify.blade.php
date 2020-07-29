@@ -7,7 +7,7 @@
 @endsection
 
 @section('scripts')
-    <script src="/js/emailVerification.js"></script>
+    <script src="/js/emailVerification.js" type="module"></script>
 @endsection
 
 @section('content')

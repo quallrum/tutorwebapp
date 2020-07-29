@@ -7,7 +7,7 @@
 @endsection
 
 @section('scripts')
-    <script src="/js/forgetPassword.js"></script>
+    <script src="/js/forgetPassword.js" type="module"></script>
 @endsection
 
 @section('content')

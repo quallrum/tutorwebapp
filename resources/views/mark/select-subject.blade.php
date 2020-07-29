@@ -7,7 +7,7 @@
 @endsection
 
 @section('scripts')
-	<script src="/js/chooseSubject.js"></script>
+	<script src="/js/chooseSubject.js" type="module"></script>
 @endsection
 
 @section('content')

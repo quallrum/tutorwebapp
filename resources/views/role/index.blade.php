@@ -9,7 +9,7 @@
 
 @section('scripts')
 	<script src="js/alerts.js"></script>
-	<script src="js/adminRoles.js"></script>
+	<script src="js/adminRoles.js" type="module"></script>
 @endsection
 
 @section('content')
